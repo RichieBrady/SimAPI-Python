@@ -36,7 +36,6 @@ class SimulationObject:
 
     def model_init(self):
         """ Initialize model with start and finish time """
-
         self.model.initialize(0, self.final_time)
 
     def do_time_step(self, json_input):

@@ -19,7 +19,7 @@ def post_model(data):
     # TODO set simulator to hostname for multiple containers
     if model is not None:
 
-        url = 'http://generator:8000/test_upload/{0}'.format(model_name)
+        url = 'http://generator:8000/file_upload/{0}'.format(model_name)
         logger.info(f'post_model url {url}')
 
         epw_file = open(model.epw_file.path, 'rb')

@@ -3,7 +3,6 @@ bottle==0.12.18
 celery==4.4.1
 kombu==4.6.8
 requests==2.22.0
-redis==3.4.1
 watchdog==0.10.2
 sqlalchemy
 pathlib==1.0.1

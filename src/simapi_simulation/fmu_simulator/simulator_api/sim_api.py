@@ -1,3 +1,4 @@
+import time
 
 from bottle import request, route, run, response
 
@@ -27,12 +28,10 @@ def get_input():
     write_time_step(t_step, '/home/deb/code/fmu_data/time_step.txt')
 
 
-@route('/test_fmu/<model_name>', method='POST')
+@route('/receive_fmu/<model_name>', method='POST')
 def receive_fmu(model_name):
     upload = request.files
     save_path = '/home/deb/code/fmu_data/' + model_name
-
-    json_data = request.forms.pop('json')
 
     try:
         os.mkdir(save_path)
@@ -41,14 +40,18 @@ def receive_fmu(model_name):
     else:
         print("Successfully created the directory %s " % save_path)
 
-    for name, file in upload.iteritems():
-        print("Saving: " + name)
-        file.save(save_path)
-
+    json_data = request.forms.pop('json')
     j_dict = {'model_params': []}
 
     j_dict['model_params'].append(json.loads(json_data))
     write_json(j_dict, save_path + '/model_params.json')
+    print("JSON_DATA RECEIVE: " + str(json_data))
+
+    time.sleep(3)
+
+    for name, file in upload.iteritems():
+        print("Saving: " + name)
+        file.save(save_path)
 
     response.status = 200
     return 'File upload success in sim container for model_name = {0}'.format(model_name)

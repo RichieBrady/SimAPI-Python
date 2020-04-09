@@ -1,16 +1,38 @@
 import json
 
+import polling2
 from rest_framework import viewsets
 from rest_framework.authentication import TokenAuthentication, SessionAuthentication
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework.authtoken.views import ObtainAuthToken
 from django.db import transaction
+from django_celery_results.models import TaskResult
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from rest_api import serializers
 from rest_api import models
 from rest_api import tasks
+
+
+def check_result_backend(model_name):
+    try:
+        task_result = TaskResult.objects.first()
+        task_name = task_result.task_name
+        task_args = task_result.task_args
+        task_status = task_result.status
+
+        if (task_name.endswith('post_model')) and (model_name in task_args) and (task_status == 'SUCCESS'):
+            print("FMU Ready")
+            return True
+    except AttributeError:
+        return False
+
+    return False
+
+
+def print_str(string):
+    print(str)
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -43,7 +65,7 @@ class FmuModelViewSet(viewsets.ModelViewSet):
         if self.request.POST.get('container_id') is None:
             self.request.data['container_id'] = 'src_simulator_1'
 
-        serializer.save(user=self.request.user)
+        serializer.save(user=self.request.user, container_id=self.request.data['container_id'])
 
         data = {
             'model_name': self.request.data['model_name'],
@@ -58,8 +80,11 @@ class FmuModelViewSet(viewsets.ModelViewSet):
 
         if self.request.data['container_id'] not in self.request.data['model_name']:
             transaction.on_commit(lambda: tasks.post_model.apply_async((data,), queue='web', routing_key='web'))
-            # TODO poll result db for result
-            #   then return http 200
+            polling2.poll(
+                lambda: check_result_backend(self.request.data['model_name']) is True,
+                step=10,
+                poll_forever=True)  # TODO need to change poll_forever and perform check to see if FMU is created
+            return Response("FMU Ready", status=200)
 
 
 class InputViewSet(viewsets.ModelViewSet):

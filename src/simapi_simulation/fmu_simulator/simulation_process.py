@@ -1,16 +1,14 @@
-import os
+import json
 import subprocess
 import time
-import json
-from pathlib import Path
+from json import JSONDecodeError
 
 import requests
-from watchdog.observers import Observer
 from watchdog.events import PatternMatchingEventHandler
-
-from simulator.simulation_obj import SimulationObject
+from watchdog.observers import Observer
 
 import simulator_tasks
+from simulator.simulation_obj import SimulationObject
 
 
 def isint(value):
@@ -22,7 +20,7 @@ def isint(value):
 
 
 class MyHandler(PatternMatchingEventHandler):
-    patterns = ["*.json", "*.txt"]
+    patterns = ["*.fmu", "*.txt"]
 
     sim_obj = None
     model_name = None
@@ -35,14 +33,24 @@ class MyHandler(PatternMatchingEventHandler):
     prev_time_step = 0
 
     def on_created(self, event):
-        #  Model initialized here when model_params.json is updated
-        if event.src_path.endswith('model_params.json') and self.model_params_set is False:
+        print("ON_CREATED")
+        if self.model_params_set is False:
+            print("INIT MODEL")
+            folder_path = str(event.src_path).rsplit('/', 1)[0]
+            print("FOLDER PATH: " + folder_path)
+            with open(folder_path + '/model_params.json') as json_file:
+                print("WITH OPEN")
+                model_params_ready = False
 
-            with open(str(event.src_path)) as json_file:
+                try:
+                    data = json.load(json_file)
+                    print("DATA IN SIM PROC: " + str(data))
+                    model_params_ready = True
+                except JSONDecodeError:
+                    json_file.close()
+                    print("model_params.json not ready!")
 
-                data = json.load(json_file)
-
-                if len(data) > 0:
+                if model_params_ready:
                     params = data['model_params'][-1]
                     self.model_name = params['model_name']
                     self.step_size = params['step_size']
@@ -54,10 +62,10 @@ class MyHandler(PatternMatchingEventHandler):
                     if not params['isSimOne']:
                         init_url = 'http://web:8000/init_model/'
                         hostname = subprocess.getoutput("cat /etc/hostname")
-                        model_name = self.model_name + '_' + hostname
+                        self.model_name = self.model_name + '_' + hostname
 
                         init_data = {
-                            'model_name': model_name,  # change name each time script is run!
+                            'model_name': self.model_name,  # change name each time script is run!
                             'step_size': self.step_size,  # step size in seconds. 600 secs = 10 mins
                             'final_time': final_time,  # 24 hours = 86400 secs
                             'container_id': hostname
@@ -68,12 +76,13 @@ class MyHandler(PatternMatchingEventHandler):
                     self.sim_obj = SimulationObject(model_name=self.model_name, step_size=int(self.step_size),
                                                     final_time=float(final_time),
                                                     path_to_fmu=fmu_path)
+
                     self.sim_obj.model_init()
 
                     self.model_params_set = True
-                    os.system('rm /home/deb/code/fmu_data/model_params.json')
 
     def on_modified(self, event):
+
         # simulation time steps run here when time_step.txt is updated
         if event.src_path.endswith('time_step.txt') and self.model_params_set is True:
             with open(str(event.src_path)) as text_file:
@@ -125,10 +134,6 @@ class MyHandler(PatternMatchingEventHandler):
                 # when last time step has completed free and terminate instance
                 if self.current_time_step == self.sim_obj.final_time - int(self.step_size):
                     self.sim_obj.model.free_instance()
-
-                    swarm_check = Path('/home/deb/code/isSwarm.txt')
-                    if swarm_check.exists():
-                        os.system('rm /home/deb/code/isSwarm.txt')
 
 
 if __name__ == '__main__':

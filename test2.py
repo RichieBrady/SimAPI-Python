@@ -18,7 +18,7 @@ print(resp.text + ' ' + str(resp.status_code))
 
 
 header = setup_user.login()
-
+print(model_count)
 # model initialization parameters
 init_data = {
     'model_name': initial_model_name,   # change name each time script is run!
