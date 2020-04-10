@@ -48,7 +48,7 @@ class SimulationObject:
         """
 
         time_step = json_input['time_step']
-
+        print("do_time_step json -> " + str(json_input))
         for key in json_input:
             if key in self.model_real_vars:
                 self.model.set(key, float(json_input[key]))
@@ -66,5 +66,5 @@ class SimulationObject:
 
         do_step_outputs['output_json'] = output
 
-        return json.dumps(do_step_outputs)
+        return do_step_outputs
 

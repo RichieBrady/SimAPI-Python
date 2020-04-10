@@ -61,9 +61,9 @@ services:
       - simapi
     restart: always
 
-  generator:
-    container_name: generator
-    build: ./simapi_simulation/fmu_generator
+  router:
+    container_name: router
+    build: ./input_output_router
     command: bash -c "/run.sh"
     ports:
       - 8001:8000
@@ -73,11 +73,25 @@ services:
       - simapi
     restart: always
 
+  generator:
+    container_name: generator
+    build: ./simapi_simulation/fmu_generator
+    command: bash -c "/run.sh"
+    ports:
+      - 8002:8000
+    depends_on:
+      - web
+    networks:
+      - simapi
+    restart: always
+
   simulator:
     build: ./simapi_simulation/fmu_simulator
     command: bash -c "/run.sh"
+    # volumes:
+    # - ./simapi_simulation/fmu_simulator:/home/deb/code
     ports:
-      - 8002-8102:8000
+      - 8003-8103:8000
     depends_on:
       - web
       - generator

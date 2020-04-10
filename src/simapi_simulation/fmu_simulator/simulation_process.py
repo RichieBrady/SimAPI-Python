@@ -7,7 +7,6 @@ import requests
 from watchdog.events import PatternMatchingEventHandler
 from watchdog.observers import Observer
 
-import simulator_tasks
 from simulator.simulation_obj import SimulationObject
 
 
@@ -123,13 +122,17 @@ class MyHandler(PatternMatchingEventHandler):
                 # run do_step for current time step with current inputs
                 output_json = self.sim_obj.do_time_step(self.current_input)
 
-                print('OUTPUT FOR MODEL: ' + self.model_name + ' | ' + output_json)
+                print('OUTPUT FOR MODEL: ' + self.model_name + ' | ' + str(output_json))
                 # task uploads output to db
-                hostname = subprocess.getoutput("cat /etc/hostname")
-                result = simulator_tasks.post_output.apply_async((output_json, self.header),
-                                                                 queue=hostname,
-                                                                 routing_key=hostname)
-                result.get()
+
+                output_url = 'http://router:8000/route_output/'
+
+                output_json['Authorization'] = self.header['Authorization']
+                print('OUTPUT FOR MODEL: ' + self.model_name + ' | ' + str(output_json))
+                r = requests.post(output_url, headers=self.header, json=json.dumps(output_json))
+                print("OUTPUT AUTH: " + str(output_json['Authorization']))
+                print("OUTPUT R.TEXT: " + str(r.text))
+                print("OUTPUT R.TEXT: " + str(r.status_code))
 
                 # when last time step has completed free and terminate instance
                 if self.current_time_step == self.sim_obj.final_time - int(self.step_size):
