@@ -7,9 +7,6 @@ from setup import Setup
 initial_model_name = sys.argv[1]
 model_count = sys.argv[2]
 
-idf_file_path = 'test_setup_files/update.idf'
-epw_file_path = 'test_setup_files/update.epw'
-
 setup_user = Setup()
 
 resp = setup_user.create_user()

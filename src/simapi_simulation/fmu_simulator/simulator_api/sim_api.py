@@ -47,7 +47,7 @@ def receive_fmu(model_name):
     write_json(j_dict, save_path + '/model_params.json')
     print("JSON_DATA RECEIVE: " + str(json_data))
 
-    time.sleep(3)
+    time.sleep(1)
 
     for name, file in upload.iteritems():
         print("Saving: " + name)
