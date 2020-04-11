@@ -122,7 +122,7 @@ On Linux sudo will be needed
 ```
 
 ### GUI
-Below is a screenshot of the user interface. It's really basic but makes it easier to run the system. 
+Below is a screenshot of the user interface. It's very basic but makes it easier to run the system. 
 ![User Interface](doc/gui.png)
 
 ##### Input Fields
