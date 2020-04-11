@@ -130,16 +130,16 @@ Model Name: Any string value. Must be unique for generating different FMUs
 
 Model Count: Number of simulator containers currently running
 
-Step Size: integer value corresponding to length of time in seconds of each time step
+Step Size: Integer value corresponding to length of time in seconds of each time step
 
-Final Time: float value corresponding to length of time in hours the simulation spans. Min value = 24.0. 
+Final Time: Float value corresponding to length of time in hours the simulation spans. Min value = 24.0. 
 
 ##### Buttons
-Upload idf: opens a file select window. Choose .idf
+Upload idf: Opens a file select window. Choose .idf
 
-Upload epw: opens a file select window. Choose .epw
+Upload epw: Opens a file select window. Choose .epw
 
-Validate Input: click validate input and files have been used correctly.
+Validate Input: Click validate input and files have been used correctly.
 
 Generate: After input validated click to generate the FMU.
 
