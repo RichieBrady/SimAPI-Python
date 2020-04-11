@@ -156,7 +156,7 @@ Fill all input fields and select .idf and .epw files.
 
 Validate the inputs are correct then, Generate, Initialize, Simulate.
 
-Check for a confirmation message in the text area before clicking the next button.
+Check for a confirmation message in the text area before clicking consecutive buttons.
 
 ##### Workflow
 Use docker-compose up --scale simulator=n to test different values for n, after 5 memory may be an issue depending
