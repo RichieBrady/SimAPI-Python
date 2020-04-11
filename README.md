@@ -147,7 +147,7 @@ Initialize: After generating the FMU click to initialize the FMU
 
 Simulate: After initializing the FMU click to run the simulation(s)
 
-###### Instructions 
+##### Instructions 
 Use docker-compose up or --scale to run the desired number of simulator containers.
 
 Once all containers are running, run the gui script **run_gui.py** located in the project root folder.
@@ -189,7 +189,7 @@ docker-compose up -d db
 
 If testing the system multiple times with different numbers of simulator containers it is a good idea, when finished, 
 to wipe the data using **docker-compose down --volumes** and also run the command below to remove any hanging containers 
-from the host machine. It may take sometime to complete a prune!
+from the host machine. It may take sometime to complete a prune!****
 ```
 docker system prune
 ```
