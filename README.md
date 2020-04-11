@@ -127,24 +127,33 @@ Below is a screenshot of the user interface. It's really basic but makes it easi
 
 ##### Input Fields
 Model Name: Any string value
+
 Model Count: Number of simulator containers currently running
+
 Step Size: integer value corresponding to length of time in seconds of each time step
+
 Final Time: float value corresponding to length of time in hours the simulation spans. Min value = 24.0. 
 
 ##### Buttons
 Upload idf: opens a file select window. Choose .idf
+
 Upload epw: opens a file select window. Choose .epw
 
 Validate Input: click validate input and files have been used correctly.
+
 Generate: After input validated click to generate the FMU.
+
 Initialize: After generating the FMU click to initialize the FMU
+
 Simulate: After initializing the FMU click to run the simulation(s)
 
 ###### Instructions 
 Use docker-compose up or --scale to run the desired number of simulator containers.
+
 Once all containers are running, run the gui script **run_gui.py** located in the project root folder.
 
 Fill all input fields and select .idf and .epw files. 
+
 Validate the inputs are correct then, Generate, Initialize, Simulate.
 
 Check for a confirmation message in the text area before clicking the next button.
