@@ -161,7 +161,7 @@ Check for a confirmation message in the text area before clicking consecutive bu
 ##### Workflow
 Use docker-compose up --scale simulator=n to test different values for n, after 5 memory may be an issue depending
 on host machine specs. Tested up to 65 simulations using roughly 13 GiB of memory. It took roughly 30-40 minutes to
-complete all 65 simulations. The FMU used by the simulations was generated with a final time of 24 (hours) and step size of 
+complete all 65 simulations. The FMU simulated was generated with a final time of 24 (hours) and step size of 
 600 seconds (10 minutes per step).
 
 Ensure that the model count value in the UI is the same as the value used to --scale the simulator container.
