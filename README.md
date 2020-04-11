@@ -21,52 +21,44 @@ Docker-compose
 
 ``` 
 .
-├── doc
-│   ├── dev_requirements.txt
-│   ├── docker_commands.txt
-│   └── ER_Diagram.png
-├── initialize_model.py     # Run Script to initialize models
 ├── LICENSE
 ├── README.md
-├── run_initialized_model.py    # Run Script to simulate initialized models
-├── src
+├── run_gui.py  # run to show gui 
+├── setup.py
+├── src     #  Each sub-folder represents a docker container
 │   ├── docker-compose.yml
-│   ├── simapi_simulation   # root folder for FMU related files
-│   │   ├── docker-compose.yml
-│   │   ├── fmu_generator  
-│   │   │   ├── celeryconfig.py
-│   │   │   ├── docker-compose.yml
-│   │   │   ├── Dockerfile
-│   │   │   ├── Energy+.idd
-│   │   │   ├── energy_plus_to_fmu.py
-│   │   │   ├── fmu_volume_monitor.py
-│   │   │   ├── generator_api.py
-│   │   │   ├── generator_tasks.py
-│   │   │   ├── requirements.txt
-│   │   │   └── run.sh
-│   │   └── fmu_simulator
-│   │       ├── celeryconfig.py
-│   │       ├── conda_requirements.txt
-│   │       ├── docker-compose.yml
-│   │       ├── Dockerfile
-│   │       ├── fmu_location
-│   │       ├── fmu_location_monitor.py
-│   │       ├── __init__.py
-│   │       ├── requirements.txt
-│   │       ├── run.sh
-│   │       ├── simulation_process.py
-│   │       ├── simulator
-│   │       │   ├── simulation_obj.py
-│   │       │   └── test_simulation_obj.py
-│   │       ├── simulator_api
-│   │       │   ├── generator_client.py
-│   │       │   └── sim_api.py
-│   │       ├── simulator_tasks.py
-│   │       ├── store_incoming_json
-│   │       │   └── time_step.txt
-│   │       ├── volume
-│   │       └── volume_monitor.py
-│   └── simapi_web      # Root folder for django REST API
+│   ├── fmu_generator 
+│   │   ├── celeryconfig.py
+│   │   ├── Dockerfile
+│   │   ├── Energy+.idd
+│   │   ├── energy_plus_to_fmu.py
+│   │   ├── generator_api.py
+│   │   ├── generator_tasks.py
+│   │   ├── requirements.txt
+│   │   └── run.sh
+│   ├── fmu_simulator
+│   │   ├── conda_requirements.txt
+│   │   ├── Dockerfile
+│   │   ├── fmu_data
+│   │   │   └── time_step.txt
+│   │   ├── __init__.py
+│   │   ├── requirements.txt
+│   │   ├── run.sh
+│   │   ├── simulation_process.py
+│   │   ├── simulator
+│   │   │   ├── simulation_obj.py
+│   │   │   └── test_simulation_obj.py
+│   │   └── simulator_api
+│   │       └── sim_api.py
+│   ├── input_output_router
+│   │   ├── celeryconfig.py
+│   │   ├── Dockerfile
+│   │   ├── __init__.py
+│   │   ├── requirements.txt
+│   │   ├── router_api.py
+│   │   ├── router_tasks.py
+│   │   └── run.sh
+│   └── simapi_web
 │       ├── Dockerfile
 │       ├── manage.py
 │       ├── Media
@@ -77,7 +69,7 @@ Docker-compose
 │       │   ├── __init__.py
 │       │   ├── migrations
 │       │   │   ├── 0001_initial.py
-│       │   │   ├── __init__.py
+│       │   │   └── __init__.py
 │       │   ├── models.py
 │       │   ├── permissions.py
 │       │   ├── schema.py
@@ -97,9 +89,11 @@ Docker-compose
 │           ├── settings.py
 │           ├── urls.py
 │           └── wsgi.py
-└── test_setup_files
-    ├── update.epw
-    └── update.idf
+├── test_setup_files
+│   ├── update.epw
+│   └── update.idf
+├── user_interface_controller.py
+└── user_interface.py
 
 ```
 
@@ -114,7 +108,7 @@ docker-compose build
 
 Once build is finished bring up the db container to initialize it. Only needed for the first time after building.
 
-docker-compose up db -d
+docker-compose up -d db
 
 Then bring the rest of the system up. No -d flag as you will need to see the output.
 
@@ -127,70 +121,40 @@ docker-compose up
 On Linux sudo will be needed
 ```
 
-### simulator
-Once the system is up and ready you should see similar output in the window running docker-compose
+### GUI
+Below is a screenshot of the user interface. It's really basic but makes it easier to run the system. 
+![User Interface](doc/gui.png)
 
-```
-generator           | [2020-04-05 22:09:08,274: INFO/MainProcess] sync with celery@f06006b0333b
-simulator_5         | [2020-04-05 22:09:08,274: INFO/MainProcess] sync with celery@f06006b0333b
-web                 | [2020-04-05 22:09:08,274: INFO/MainProcess] sync with celery@f06006b0333b
-simulator_1         | [2020-04-05 22:09:08,274: INFO/MainProcess] sync with celery@f06006b0333b
-simulator_2         | [2020-04-05 22:09:08,275: INFO/MainProcess] sync with celery@f06006b0333b
-simulator_4         | [2020-04-05 22:09:08,275: INFO/MainProcess] sync with celery@f06006b0333b
-simulator_3         | [2020-04-05 22:09:09,310: INFO/MainProcess] mingle: sync with 6 nodes
-simulator_3         | [2020-04-05 22:09:09,311: INFO/MainProcess] mingle: sync complete
-simulator_3         | [2020-04-05 22:09:09,412: INFO/MainProcess] celery@f06006b0333b ready.
+##### Input Fields
+Model Name: Any string value
+Model Count: Number of simulator containers currently running
+Step Size: integer value corresponding to length of time in seconds of each time step
+Final Time: float value corresponding to length of time in hours the simulation spans. Min value = 24.0. 
 
-```
-The system is now ready to initialize the models.
+##### Buttons
+Upload idf: opens a file select window. Choose .idf
+Upload epw: opens a file select window. Choose .epw
 
-To Run the initialize_model.py script open terminal window in the project root folder and run
+Validate Input: click validate input and files have been used correctly.
+Generate: After input validated click to generate the FMU.
+Initialize: After generating the FMU click to initialize the FMU
+Simulate: After initializing the FMU click to run the simulation(s)
 
-```
-python initialize_model.py model_name
-```
+###### Instructions 
+Use docker-compose up or --scale to run the desired number of simulator containers.
+Once all containers are running, run the gui script **run_gui.py** located in the project root folder.
 
-Where model_name is a user defined string argument for the script.
+Fill all input fields and select .idf and .epw files. 
+Validate the inputs are correct then, Generate, Initialize, Simulate.
 
-Check the output in the docker-compose window once the simulation object is ready to receive inputs you will see the output below
+Check for a confirmation message in the text area before clicking the next button.
 
-```
-simulator_1         | Starting Simulation at 01/01/2011 for RUNPERIOD 1
-simulator_1         | ExternalInterface starts first data exchange
-```
-
-From the project root folder run
-
-```
-python run_initialized_model.py model_name
-```
-
-Where model_name is the same value passed to initialize_model.py.
-
-Outputs are printed for each model on the same time step. Check the window running docker-compose for debugging information.
-
-Once the simulations have ended you will see the output 
-```
-simulator_1         | Writing tabular output file results using HTML format.
-simulator_1         | Writing final SQL reports
-simulator_1         |  ReadVarsESO program starting.
-simulator_1         |  ReadVars Run Time=00hr 00min  0.05sec
-simulator_1         |  ReadVarsESO program completed successfully.
-simulator_1         |  ReadVarsESO program starting.
-simulator_1         |  ReadVars Run Time=00hr 00min  0.02sec
-simulator_1         |  ReadVarsESO program completed successfully.
-simulator_1         | EnergyPlus Run Time=00hr 08min  5.90sec
-simulator_1         | EnergyPlus Completed Successfully.
-simulator_1         | [INFO][Slave] [ok][FMU status:OK] freeInstanceResources: Slave will be freed.
-
-```
-
-Bring down the containers with ctrl-c
-
+##### Workflow
 Use docker-compose up --scale simulator=n to test different values for n after 5 memory may be an issue depending
 on host machine specs. Tested up to 25 simulations.
 
 To wipe the data from the database and containers run 
+
 ```
 docker-compose down --volumes
 ```
@@ -199,7 +163,17 @@ Then initialize the database again with
 docker-compose up -d db 
 ```
 
+Ensure that the model count value in the UI you enter is the same as the value used to --scale the simulator container.
+If no --scale command was used the value entered for model count is 1.
 
+When the simulation(s) has finished bring down the containers with ctrl-c. It is possible to use previously generated
+FMUs if you would like to test with a different number of simulator containers. Use docker-compose to --scale the container
+to a desired value, then in the UI just change the model count value, skip the Generate step and go straight to Initialize. 
+This will initialize the the previously generated FMU.
+
+Notes: The gui simulate command is hardcoded to only run an FMU generated using the test update.idf and update.epw.
+       There is currently no way to upload inputs. A test input file is needed to implement this feature. Maybe a test
+       cvs file that the user can upload. Also a feature to download the generated FMU is needed.
 
 ## Project Development
 

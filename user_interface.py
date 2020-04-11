@@ -111,9 +111,9 @@ class UserInterface:
         self.text_area.config(state=NORMAL)
         self.text_area.delete('1.0', END)
         if init_status == 200:
-            self.text_area.insert(END, "FMU generated successfully. Initialize button now active\n")
+            self.text_area.insert(END, "Model(s) initialized successfully. Simulate button now active\n")
         else:
-            self.text_area.insert(END, "Something went wrong generating the FMU\n")
+            self.text_area.insert(END, "Something went wrong initializing the FMU\n")
 
         self.text_area.config(state=DISABLED)
 
@@ -269,6 +269,7 @@ class UserInterface:
 
             i += 600
 
+        self.text_area.insert(END, "\nSimulation(s) finished!\n")
         self.text_area.config(state=DISABLED)
         return 200
 
