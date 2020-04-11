@@ -9,7 +9,7 @@ import json
 import os.path
 import generator_tasks
 
-sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '../simapi_simulation'))
 
 
 @route('/file_upload/<model_name>', method='POST')

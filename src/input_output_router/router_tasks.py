@@ -1,8 +1,5 @@
-import json
-
 from celery import Celery
 import celeryconfig
-import bottle
 import requests
 import sys
 import os

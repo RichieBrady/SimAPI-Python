@@ -1,9 +1,0 @@
-version: '3.7'
-
-services:
-  sim:
-    container_name: test_simulator
-    build: .
-    command:  bash -c "tail -f /dev/null"
-    volumes:
-      - ./volume:/home/deb/code/volume # TODO create script to make new folder for each sim run and place OutputExpSlave

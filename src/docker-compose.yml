@@ -75,7 +75,7 @@ services:
 
   generator:
     container_name: generator
-    build: ./simapi_simulation/fmu_generator
+    build: ./fmu_generator
     command: bash -c "/run.sh"
     ports:
       - 8002:8000
@@ -86,10 +86,8 @@ services:
     restart: always
 
   simulator:
-    build: ./simapi_simulation/fmu_simulator
+    build: ./fmu_simulator
     command: bash -c "/run.sh"
-    # volumes:
-    # - ./simapi_simulation/fmu_simulator:/home/deb/code
     ports:
       - 8003-8103:8000
     depends_on:
