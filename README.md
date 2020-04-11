@@ -139,7 +139,7 @@ Upload idf: Opens a file select window. Choose .idf
 
 Upload epw: Opens a file select window. Choose .epw
 
-Validate Input: Click validate input and files have been used correctly.
+Validate Input: Click validate input to check if inputs are correct.
 
 Generate: After input validated click to generate the FMU.
 
