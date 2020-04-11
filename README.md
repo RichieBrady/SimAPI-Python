@@ -126,7 +126,7 @@ Below is a screenshot of the user interface. It's really basic but makes it easi
 ![User Interface](doc/gui.png)
 
 ##### Input Fields
-Model Name: Any string value
+Model Name: Any string value. Must be unique for generating different FMUs
 
 Model Count: Number of simulator containers currently running
 
