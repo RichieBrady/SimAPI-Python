@@ -159,10 +159,24 @@ Validate the inputs are correct then, Generate, Initialize, Simulate.
 Check for a confirmation message in the text area before clicking the next button.
 
 ##### Workflow
-Use docker-compose up --scale simulator=n to test different values for n after 5 memory may be an issue depending
-on host machine specs. Tested up to 25 simulations.
+Use docker-compose up --scale simulator=n to test different values for n, after 5 memory may be an issue depending
+on host machine specs. Tested up to 65 simulations using roughly 14 GiB of memory, taking roughly 30-40 minutes to
+complete all simulations.
 
-To wipe the data from the database and containers run 
+Ensure that the model count value in the UI you enter is the same as the value used to --scale the simulator container.
+If no --scale command was used the value entered for model count is 1.
+
+When the simulation(s) have finished bring down the containers with ctrl-c, it is possible to use previously generated
+FMUs if you would like to test with a different number of simulator containers. Use docker-compose to --scale the container
+to a desired value, then in the UI just change the model count value, skip the Generate step and go straight to Initialize. 
+This will initialize the previously generated FMU which is stored in the generator container.
+
+Notes: The gui simulate command is hardcoded to only run an FMU generated using the test update.idf and update.epw.
+       There is currently no way to upload inputs. A test input file is needed to implement this feature. Maybe a test
+       cvs file that the user can upload. Also a feature to download the generated FMU is needed.
+
+
+To wipe the data from the database and containers run. 
 
 ```
 docker-compose down --volumes
@@ -172,17 +186,12 @@ Then initialize the database again with
 docker-compose up -d db 
 ```
 
-Ensure that the model count value in the UI you enter is the same as the value used to --scale the simulator container.
-If no --scale command was used the value entered for model count is 1.
-
-When the simulation(s) has finished bring down the containers with ctrl-c. It is possible to use previously generated
-FMUs if you would like to test with a different number of simulator containers. Use docker-compose to --scale the container
-to a desired value, then in the UI just change the model count value, skip the Generate step and go straight to Initialize. 
-This will initialize the the previously generated FMU.
-
-Notes: The gui simulate command is hardcoded to only run an FMU generated using the test update.idf and update.epw.
-       There is currently no way to upload inputs. A test input file is needed to implement this feature. Maybe a test
-       cvs file that the user can upload. Also a feature to download the generated FMU is needed.
+If testing the system multiple times with different numbers of simulator containers it is a good idea to wipe the data
+and also run the command below to remove any hanging containers from the host machine. It may take sometime to complete!
+```
+docker system prune
+```
+Hanging containers can quickly take up a lot of space.
 
 ## Project Development
 
