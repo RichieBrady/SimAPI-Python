@@ -160,20 +160,21 @@ Check for a confirmation message in the text area before clicking consecutive bu
 
 ##### Workflow
 Use docker-compose up --scale simulator=n to test different values for n, after 5 memory may be an issue depending
-on host machine specs. Tested up to 65 simulations using roughly 14 GiB of memory, taking roughly 30-40 minutes to
-complete all simulations.
+on host machine specs. Tested up to 65 simulations using roughly 13 GiB of memory. It took roughly 30-40 minutes to
+complete all 65 simulations. The FMU used by the simulations was generated with a final time of 24 (hours) and step size of 
+600 seconds (10 minutes per step).
 
-Ensure that the model count value in the UI you enter is the same as the value used to --scale the simulator container.
+Ensure that the model count value in the UI is the same as the value used to --scale the simulator container.
 If no --scale command was used the value entered for model count is 1.
 
-When the simulation(s) have finished bring down the containers with ctrl-c, it is possible to use previously generated
-FMUs if you would like to test with a different number of simulator containers. Use docker-compose to --scale the container
-to a desired value, then in the UI just change the model count value, skip the Generate step and go straight to Initialize. 
+When the simulation(s) have finished bring down the containers with ctrl-c, it is then possible to use the previously generated
+FMU if you would like to test with a different number of simulator containers. Use docker-compose to --scale the container
+to a desired value, then in the UI only change the model count value, skip the Generate step and go straight to Initialize. 
 This will initialize the previously generated FMU which is stored in the generator container.
 
 Notes: The gui simulate command is hardcoded to only run an FMU generated using the test update.idf and update.epw.
-       There is currently no way to upload inputs. A test input file is needed to implement this feature. Maybe a test
-       cvs file that the user can upload. Also a feature to download the generated FMU is needed.
+       There is currently no way to upload inputs. A test input file with a standard format e.g. csv, 
+       is needed to implement this feature. Also a feature to download the generated FMU is needed.
 
 
 To wipe the data from the database and containers run. 
