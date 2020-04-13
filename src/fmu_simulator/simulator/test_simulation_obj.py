@@ -1,6 +1,8 @@
 import os.path
 import sys
 
+from pyfmi.fmi import load_fmu
+
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 from simulator.simulation_obj import SimulationObject
@@ -9,10 +11,19 @@ from simulator.simulation_obj import SimulationObject
 
 
 #  instantiate simulation obj with default values
-sim_obj = SimulationObject(model_name='abc.fmu', final_time=24.0, path_to_fmu='abc.fmu')
-sim_obj.model_init()  # initialize fmu model. Calls pyFMI model.init() and sets start and finish time
+# sim_obj = SimulationObject(model_name='asd.fmu', final_time=24.0, path_to_fmu='asd.fmu')
+
+model = load_fmu('test.fmu', log_level=4)
+
+final_time = 60*60*24
+
+model.initialize(0, final_time)
+
+# sim_obj.model_init()  # initialize fmu model. Calls pyFMI model.init() and sets start and finish time
 # new dictionary with inputs for fmu time step
 
+
+"""
 i = 0
 shade = 1.0
 
@@ -23,3 +34,4 @@ while i < 86400:
     i += 600
 
 print("FINISHED")
+"""

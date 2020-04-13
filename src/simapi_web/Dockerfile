@@ -7,6 +7,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
                nmap
 
 RUN mkdir /code
+RUN mkdir /code/Media
 WORKDIR /code
 COPY . /code
 RUN pip install -r requirements.txt

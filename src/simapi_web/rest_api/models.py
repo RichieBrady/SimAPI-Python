@@ -111,6 +111,10 @@ class Output(models.Model):
     objects = models.Manager()
 
 
+class FileModel(models.Model):
+    file = FileField(upload_to='./Media/', default='')
+
+
 class ContainerHostNames(models.Model):
     hostname = models.CharField(max_length=255)
 

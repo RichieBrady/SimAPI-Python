@@ -4,12 +4,9 @@ from pathlib import Path
 import requests
 from bottle import request, route, run, response
 
-import sys
 import json
 import os.path
 import generator_tasks
-
-sys.path.append(os.path.join(os.path.dirname(__file__), '../simapi_simulation'))
 
 
 @route('/file_upload/<model_name>', method='POST')
@@ -93,6 +90,7 @@ def send_fmu(model_name):
         r = requests.post(url, files=file)
 
         print(r.status_code)
+        print(r.text)
         fmu_file.close()
         time.sleep(3)
         i += 1

@@ -1,6 +1,7 @@
 import json
 
 import polling2
+from django.http import HttpResponse
 from rest_framework import viewsets
 from rest_framework.authentication import TokenAuthentication, SessionAuthentication
 from rest_framework.authtoken.serializers import AuthTokenSerializer
@@ -148,6 +149,22 @@ class SendFMUView(APIView):
         result = tasks.send_fmu.apply_async((data,), queue='web', routing_key='web')
 
         return Response(result.get())
+
+
+class FileUploadView(viewsets.ModelViewSet):
+    serializer_class = serializers.UploadSerializer
+    queryset = models.FileModel.objects.all()
+
+    def post(self, request):
+        file_model = models.FileModel()
+        _, file = request.FILES.popitem()  # get first element of the uploaded files
+
+        file = file[0]  # get the file from MultiValueDict
+
+        file_model.file = file
+        file_model.save()
+
+        return HttpResponse(content_type='text/plain', content='File uploaded')
 
 
 class HostNameViewSet(viewsets.ModelViewSet):

@@ -16,7 +16,7 @@ RUN chmod +x /run.sh
 
 USER deb
 RUN mkdir /home/deb/code
-RUN mkdir /home/deb/code/volume/
+RUN mkdir /home/deb/code/fmu_data
 WORKDIR /home/deb/code
 COPY . /home/deb/code/
 
@@ -25,16 +25,16 @@ RUN wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -
     && bash ~/miniconda.sh -b -p ~/miniconda \
     && rm ~/miniconda.sh
 
-RUN wget https://github.com/NREL/EnergyPlus/releases/download/v9.0.1/EnergyPlus-9.0.1-bb7ca4f0da-Linux-x86_64.tar.gz -O ~/EnergyPlus-9.0.1-bb7ca4f0da-Linux-x86_64.tar.gz \
+RUN wget https://github.com/NREL/EnergyPlus/releases/download/v9.1.0/EnergyPlus-9.1.0-08d2e308bb-Linux-x86_64.tar.gz -O ~/EnergyPlus-9.1.0-08d2e308bb-Linux-x86_64.tar.gz \
     && mkdir /home/deb/EnergyPlus \
-    && tar -xzvf ~/EnergyPlus-9.0.1-bb7ca4f0da-Linux-x86_64.tar.gz -C  ~/EnergyPlus/ \
-    && rm ~/EnergyPlus-9.0.1-bb7ca4f0da-Linux-x86_64.tar.gz \
-    && mv ~/EnergyPlus/EnergyPlus-9.0.1-bb7ca4f0da-Linux-x86_64/EnergyPlus-9-0-1 ~/EnergyPlus/ \
-    && rm -d ~/EnergyPlus/EnergyPlus-9.0.1-bb7ca4f0da-Linux-x86_64
+    && tar -xzvf ~/EnergyPlus-9.1.0-08d2e308bb-Linux-x86_64.tar.gz -C  ~/EnergyPlus/ \
+    && rm ~/EnergyPlus-9.1.0-08d2e308bb-Linux-x86_64.tar.gz \
+    && mv ~/EnergyPlus/EnergyPlus-9.1.0-08d2e308bb-Linux-x86_64/* ~/EnergyPlus/ \
+    && rm -d ~/EnergyPlus/EnergyPlus-9.1.0-08d2e308bb-Linux-x86_64
 
 ENV PATH /root/miniconda/bin:$PATH
 ENV PATH /home/deb/miniconda/bin:$PATH
-ENV PATH /home/deb/EnergyPlus/EnergyPlus-9-0-1:$PATH
+ENV PATH /home/deb/EnergyPlus:$PATH
 
 RUN conda update conda \
    && conda update --all \

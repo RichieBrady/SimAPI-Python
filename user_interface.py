@@ -3,9 +3,9 @@ from tkinter import *
 from tkinter import filedialog
 from tkinter import scrolledtext
 import threading
+import pandas as pd
 import polling2
 import requests
-
 from setup import Setup
 from user_interface_controller import Controller
 
@@ -19,6 +19,7 @@ class UserInterface:
     main_window = None
     idf_path = None
     epw_path = None
+    csv_paths = None
 
     # model name label and input box
     name_label = None
@@ -43,6 +44,9 @@ class UserInterface:
 
     def get_epw(self):
         self.epw_path = filedialog.askopenfilename()
+
+    def get_csv(self):
+        self.csv_paths = filedialog.askopenfilenames()
 
     def validate_model_parameters(self):
         self.text_area.config(state=NORMAL)
@@ -84,12 +88,25 @@ class UserInterface:
         else:
             self.text_area.insert(END, "epw path is not set or path does not end with .epw\n")
 
+        if self.csv_paths is not None:
+            for path in self.csv_paths:
+                if path.endswith('.csv'):
+                    self.text_area.insert(END, "csv path is ok\n")
+                    self.text_area.insert(END, path + "\n")
+                else:
+                    self.text_area.insert(END, "No path to csv file\n")
+                    self.text_area.insert(END, path + "\n")
+        else:
+            self.text_area.insert(END, "csv path is not set or path does not end with .epw\n")
+
         self.text_area.config(state=DISABLED)
 
     def gen_fmu(self):
         gen_status = self.controller.send_and_generate(
             self.name_txt.get(),
             self.m_count_text.get(),
+            self.t_step_text.get(),
+            self.f_time_text.get(),
             self.idf_path,
             self.epw_path
         )
@@ -107,6 +124,8 @@ class UserInterface:
         init_status = self.controller.send_and_init(
             self.name_txt.get(),
             self.m_count_text.get(),
+            self.t_step_text.get(),
+            self.f_time_text.get(),
         )
         self.text_area.config(state=NORMAL)
         self.text_area.delete('1.0', END)
@@ -173,6 +192,10 @@ class UserInterface:
                             command=lambda: self.get_epw())
         upload_epw.grid(column=4, row=1, padx=5, pady=5)
 
+        upload_epw = Button(input_frame, relief='raised', text="upload csv(s)", font=(self.font, 10, "bold"),
+                            command=lambda: self.get_csv())
+        upload_epw.grid(column=5, row=0, padx=5, pady=5)
+
         button_frame = Frame(self.main_window, bg='#37474F')
         button_frame.grid(row=2, sticky='S')
 
@@ -224,17 +247,29 @@ class UserInterface:
             sim_names.append(name)  # store extracted model names.
             i += 1
 
-        shade = 1.0  # input value. Stays same on each iteration.
-
         self.text_area.config(state=NORMAL)
         self.text_area.delete('1.0', END)
+
+        f_time = 60 * 60 * int(self.f_time_text.get())
+        step_size = int(self.t_step_text.get())
+
+        data_frames = []
+        for file in self.csv_paths:
+            data_frames.append(pd.read_csv(file))
+
         i = 0  # first step
-        # run 24 hour (86400sec) simulation at 10 minute (600sec) time steps
-        while i < 86400:  # outer loop iterates over time steps
+        while i < f_time:  # TODO Make final time generic
 
             j = 0
             while j < model_count:
-                input_dict = {'time_step': i, 'yShadeFMU': shade}  # input is user defined, can be any number of inputs
+                if len(data_frames) > 1:
+                    df = data_frames[j]
+                else:
+                    df = data_frames[0]
+
+                row = df.loc[df['time_step'] == i]
+                print(row)
+                input_dict = row.to_dict('records')[0]
 
                 input_data = {
                     'fmu_model': sim_names[j],
@@ -264,10 +299,11 @@ class UserInterface:
                         'outputs']
 
                 test = json.loads(json_output[0]['outputJson'])
+                print("Output: " + str(test) + "\n")
                 self.text_area.insert(END, "Output: " + str(test) + "\n")
                 j += 1
 
-            i += 600
+            i += step_size
 
         self.text_area.insert(END, "\nSimulation(s) finished!\n")
         self.text_area.config(state=DISABLED)

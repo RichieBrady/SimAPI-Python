@@ -26,7 +26,7 @@ router.register('login', views.LoginViewSet, basename='login')
 router.register('init_model', views.FmuModelViewSet)
 router.register('input', views.InputViewSet)
 router.register('output', views.OutputViewSet)
-router.register('hostname', views.HostNameViewSet, basename='hostname')
+router.register('upload', views.FileUploadView, basename='upload')
 
 urlpatterns = [
     path('admin/', admin.site.urls),

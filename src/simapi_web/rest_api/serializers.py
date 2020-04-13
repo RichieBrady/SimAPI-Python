@@ -1,6 +1,6 @@
 from django.db import models
 from rest_framework import serializers
-from rest_api.models import Input, Output, User, FmuModel, ContainerHostNames
+from rest_api.models import Input, Output, User, FmuModel, ContainerHostNames, FileModel
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -59,6 +59,13 @@ class OutputSerializer(serializers.ModelSerializer):
         """read-only fields user and model_name. Can only be created by authenticated user"""
         extra_kwargs = {'user': {'read_only': True},
                         'fmu_model': {'read_only': True}}
+
+
+class UploadSerializer(serializers.ModelSerializer):
+    """Test File upload model"""
+    class Meta:
+        model = FileModel
+        fields = ('file',)
 
 
 class HostNameSerializer(serializers.ModelSerializer):

@@ -8,7 +8,7 @@ class Controller:
 
     initialized_model_count = 0
 
-    def send_and_generate(self, initial_model_name, model_count, idf_path, epw_path):
+    def send_and_generate(self, initial_model_name, model_count, step_size, final_time, idf_path, epw_path):
         resp = self.setup_user.create_user()
 
         print(resp.text + ' ' + str(resp.status_code))
@@ -27,15 +27,15 @@ class Controller:
             'model_name': initial_model_name,  # change name each time script is run!
             'container_id': None,
             'model_count': model_count,
-            'step_size': 600,  # step size in seconds. 600 secs = 10 mins
-            'final_time': 24.0  # 24 hours = 86400 secs
+            'step_size': step_size,  # step size in seconds. 600 secs = 10 mins
+            'final_time': final_time  # 24 hours = 86400 secs
         }
 
         resp = requests.post(self.setup_user.init_url, headers=header, data=init_data, files=file)
 
         return resp.status_code
 
-    def send_and_init(self, initial_model_name, model_count):
+    def send_and_init(self, initial_model_name, model_count, step_size, final_time,):
         resp = self.setup_user.create_user()
 
         print(resp.text + ' ' + str(resp.status_code))
@@ -47,8 +47,8 @@ class Controller:
             'model_name': initial_model_name,  # change name each time script is run!
             'container_id': None,
             'model_count': model_count,
-            'step_size': 600,  # step size in seconds. 600 secs = 10 mins
-            'final_time': 24.0  # 24 hours = 86400 secs
+            'step_size': step_size,  # step size in seconds. 600 secs = 10 mins
+            'final_time': final_time  # 24 hours = 86400 secs
         }
 
         resp = requests.post(self.setup_user.send_fmu, headers=header, json=init_data)

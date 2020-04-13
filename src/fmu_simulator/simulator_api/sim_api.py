@@ -16,7 +16,6 @@ def write_json(data, filename):
 
 def write_time_step(t_step, filename):
     with open(filename, 'w') as f:
-        f.seek(0)
         f.write(t_step)
 
 
