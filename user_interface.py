@@ -21,19 +21,19 @@ class UserInterface:
     epw_path = None
     csv_paths = None
 
-    # model name label and input box
+    # model name
     name_label = None
     name_txt = None
 
-    # model count label and input box
+    # model count
     m_count_label = None
     m_count_text = None
 
-    # time step label and input box
+    # time step
     t_step_label = None
     t_step_text = None
 
-    # final time label and input box
+    # final time
     f_time_label = None
     f_time_text = None
 
@@ -268,9 +268,8 @@ class UserInterface:
                     df = data_frames[0]
 
                 row = df.loc[df['time_step'] == i]
-                print(row)
-                input_dict = row.to_dict('records')[0]
-
+                input_dict = row.to_dict('records')
+                input_dict = input_dict[0]
                 input_data = {
                     'fmu_model': sim_names[j],
                     'time_step': i,

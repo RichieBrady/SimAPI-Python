@@ -15,8 +15,6 @@ def route_input(container_id):
 
 @route('/route_output/', method='POST')
 def route_output():
-
-    print("JSON TYPE route_output: " + str(type(request.json)))
     output_data = json.loads(request.json)
     post_output.apply_async((output_data,), queue='router', routing_key='router')
 

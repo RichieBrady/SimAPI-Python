@@ -6,8 +6,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
                wget \
                vim \
                sudo \
-               iputils-ping \
-               curl
+               iputils-ping
 
 RUN useradd -rm -d /home/deb -s /bin/bash -g root -G sudo -u 1002 deb
 COPY run.sh /run.sh

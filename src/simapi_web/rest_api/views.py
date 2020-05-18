@@ -155,7 +155,8 @@ class FileUploadView(viewsets.ModelViewSet):
     serializer_class = serializers.UploadSerializer
     queryset = models.FileModel.objects.all()
 
-    def post(self, request):
+    @staticmethod
+    def post(request):
         file_model = models.FileModel()
         _, file = request.FILES.popitem()  # get first element of the uploaded files
 

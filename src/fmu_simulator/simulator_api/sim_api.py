@@ -34,8 +34,11 @@ def receive_fmu(model_name):
 
     try:
         os.mkdir(save_path)
-    except OSError:
-        print("Creation of the directory %s failed" % save_path)
+    except (IOError, OSError) as error:
+        if error == IOError:
+            print("Error {0} encountered file already exists".format(error))
+        else:
+            print("Error {0} encountered problem saving file".format(error))
     else:
         print("Successfully created the directory %s " % save_path)
 
@@ -50,7 +53,13 @@ def receive_fmu(model_name):
 
     for name, file in upload.iteritems():
         print("Saving: " + name)
-        file.save(save_path)
+        try:
+            file.save(save_path)
+        except IOError as error:  # need way to trigger sim process without creating new folder/file
+            new_file = open(save_path + '/trigger.txt', 'w')
+            new_file.write("Trigger FMU")
+            new_file.close()
+            print("Error {0} Reusing existing file".format(error))
 
     response.status = 200
     return 'File upload success in sim container for model_name = {0}'.format(model_name)

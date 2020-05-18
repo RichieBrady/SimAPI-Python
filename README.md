@@ -16,90 +16,6 @@ Docker-compose
 - version >= 1.25.0
 ```
 
-
-### Project structure
-
-``` 
-.
-├── LICENSE
-├── README.md
-├── run_gui.py  # run to show gui 
-├── setup.py
-├── src     #  Each sub-folder represents a docker container
-│   ├── docker-compose.yml
-│   ├── fmu_generator 
-│   │   ├── celeryconfig.py
-│   │   ├── Dockerfile
-│   │   ├── Energy+.idd
-│   │   ├── energy_plus_to_fmu.py
-│   │   ├── generator_api.py
-│   │   ├── generator_tasks.py
-│   │   ├── requirements.txt
-│   │   └── run.sh
-│   ├── fmu_simulator
-│   │   ├── conda_requirements.txt
-│   │   ├── Dockerfile
-│   │   ├── fmu_data
-│   │   │   └── time_step.txt
-│   │   ├── __init__.py
-│   │   ├── requirements.txt
-│   │   ├── run.sh
-│   │   ├── simulation_process.py
-│   │   ├── simulator
-│   │   │   ├── simulation_obj.py
-│   │   │   └── test_simulation_obj.py
-│   │   └── simulator_api
-│   │       └── sim_api.py
-│   ├── input_output_router
-│   │   ├── celeryconfig.py
-│   │   ├── Dockerfile
-│   │   ├── __init__.py
-│   │   ├── requirements.txt
-│   │   ├── router_api.py
-│   │   ├── router_tasks.py
-│   │   └── run.sh
-│   └── simapi_web
-│       ├── Dockerfile
-│       ├── manage.py
-│       ├── Media
-│       ├── requirements.txt
-│       ├── rest_api
-│       │   ├── admin.py
-│       │   ├── apps.py
-│       │   ├── __init__.py
-│       │   ├── migrations
-│       │   │   ├── 0001_initial.py
-│       │   │   └── __init__.py
-│       │   ├── models.py
-│       │   ├── permissions.py
-│       │   ├── schema.py
-│       │   ├── serializers.py
-│       │   ├── tasks.py
-│       │   ├── tests
-│       │   │   ├── __init__.py
-│       │   │   ├── test_models.py
-│       │   │   └── test_views.py
-│       │   ├── urls.py
-│       │   └── views.py
-│       └── simapi_web
-│           ├── asgi.py
-│           ├── celery.py
-│           ├── __init__.py
-│           ├── schema.py
-│           ├── settings.py
-│           ├── urls.py
-│           └── wsgi.py
-├── test_setup_files
-│   ├── update.epw
-│   └── update.idf
-├── user_interface_controller.py
-└── user_interface.py
-
-```
-
-### API Database ER Diagram
-![ER Diagram](doc/ER_Diagram.png)
-
 ## Instructions
 To build and run the containers navigate to src folder and type in a terminal
 
@@ -108,21 +24,29 @@ docker-compose build
 
 Once build is finished bring up the db container to initialize it. Only needed for the first time after building.
 
-docker-compose up -d db
+docker-compose up db
 
-Then bring the rest of the system up. No -d flag as you will need to see the output.
+The message below signals that the database has been initialized.
+database system is ready to accept connections
 
-NOTE: To run multiple simulations run docker-compose up --scale simulator=n, where n is the desired number of simulations
+use ctrl-c to bring the database container down.
+
+Next bring the whole system up
 
 For a single simulation run
 
 docker-compose up
 
-On Linux sudo will be needed
+To run multiple simulations run 
+docker-compose up --scale simulator=n
+
+where n is the desired number of simulations
+
 ```
 
 ### GUI
-Below is a screenshot of the user interface. It's very basic but makes it easier to run the system. 
+Below is a screenshot of the user interface. It's very basic but makes it easier to run the system for testing and does 
+not represent the user experience intended for the final project. 
 ![User Interface](doc/gui.png)
 
 ##### Input Fields
@@ -159,23 +83,16 @@ Validate the inputs are correct then, Generate, Initialize, Simulate.
 Check for a confirmation message in the text area before clicking consecutive buttons.
 
 ##### Workflow
-Use docker-compose up --scale simulator=n to test different values for n, after 5 memory may be an issue depending
-on host machine specs. Tested up to 65 simulations using roughly 13 GiB of memory. It took roughly 30-40 minutes to
-complete all 65 simulations. The FMU simulated was generated with a final time of 24 (hours) and step size of 
-600 seconds (10 minutes per step).
+Use docker-compose up --scale simulator=n to test different values for n, higher values for n will be memory intensive
+and may cause issues depending on host machine specs. The system has been tested with up to a maximum of 65 simulations 
+using approximately 13 GiB of memory. It took roughly 30-40 minutes to complete all 65 simulations. 
+The FMU simulated was generated with a final time of 24 (hours) and step size of 600 seconds (10 minutes per step).
 
 Ensure that the model count value in the UI is the same as the value used to --scale the simulator container.
-If no --scale command was used the value entered for model count is 1.
+If no --scale command was used the value entered for model count should be 1.
 
-When the simulation(s) have finished bring down the containers with ctrl-c, it is then possible to use the previously generated
-FMU if you would like to test with a different number of simulator containers. Use docker-compose to --scale the container
-to a desired value, then in the UI only change the model count value, skip the Generate step and go straight to Initialize. 
-This will initialize the previously generated FMU which is stored in the generator container.
-
-Notes: The gui simulate command is hardcoded to only run an FMU generated using the test update.idf and update.epw.
-       There is currently no way to upload inputs. A test input file with a standard format e.g. csv, 
-       is needed to implement this feature. Also a feature to download the generated FMU is needed.
-
+When the simulation(s) have finished bring down the containers with ctrl-c. When running a new simulation the model should
+be given a unique name.
 
 To wipe the data from the database and containers run. 
 

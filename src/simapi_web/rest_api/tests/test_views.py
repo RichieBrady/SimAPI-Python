@@ -1,10 +1,9 @@
-from django.urls import reverse
-
-from rest_framework.test import APITestCase, APIRequestFactory
-from rest_framework.views import status
-from rest_api.models import User, FmuModel, Input, Output
-from rest_api.views import LoginViewSet
 from rest_framework.authtoken.models import Token
+from rest_framework.test import APITestCase
+
+from rest_api.models import User, FmuModel
+
+
 # TODO write tests
 
 

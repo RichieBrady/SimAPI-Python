@@ -1,10 +1,10 @@
 import os
 import sys
-import json
-import pyfmi
 
+import pyfmi
 from pyfmi import load_fmu
 from pyfmi.fmi import FMUModelCS2
+
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 
@@ -49,6 +49,7 @@ class SimulationObject:
 
         time_step = json_input['time_step']
         print("do_time_step json -> " + str(json_input))
+        # identify input variable type
         for key in json_input:
             if key in self.model_real_vars:
                 self.model.set(key, float(json_input[key]))

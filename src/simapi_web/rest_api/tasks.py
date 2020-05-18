@@ -58,7 +58,6 @@ def post_input(data):
         logger.info(f'post_input url {url}')
         headers = {'Content-type': 'application/json'}
         data = {'time_step': data['time_step']}
-        r = requests.post(url=url, json=json.dumps(data), headers=headers)
 
 
 @shared_task

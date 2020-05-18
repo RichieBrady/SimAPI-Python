@@ -10,7 +10,7 @@ import generator_tasks
 
 
 @route('/file_upload/<model_name>', method='POST')
-def test(model_name):
+def file_upload(model_name):
     upload = request.files
     save_path = '/home/fmu/code/energy/test/' + model_name
 
@@ -84,9 +84,6 @@ def send_fmu(model_name):
                 'json': (None, json.dumps(json_data), 'application/json')}
 
         url = 'http://src_simulator_{0}:8000/receive_fmu/{1}'.format(i, model_name)
-        print(url)
-        print(json_data)
-        # TODO add logic to find out if model init is success, Keep count and pass back to user as response.
         r = requests.post(url, files=file)
 
         print(r.status_code)

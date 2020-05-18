@@ -5,8 +5,6 @@ from pyfmi.fmi import load_fmu
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
-from simulator.simulation_obj import SimulationObject
-
 """ Simple test script to. Tests functionality of the simulation_obj class"""
 
 
