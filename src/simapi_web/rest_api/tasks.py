@@ -16,7 +16,6 @@ def post_model(data):
     logger.info(f'post_model data AUTH {auth_t}')
     model = models.FmuModel.objects.get(model_name=model_name)
 
-    # TODO set simulator to hostname for multiple containers
     if model is not None:
         url = 'http://generator:8000/file_upload/{0}'.format(model_name)
         logger.info(f'post_model url {url}')
@@ -50,7 +49,6 @@ def send_fmu(data):
 @shared_task
 def post_input(data):
     logger.info(f'post_input data {data}')
-    # TODO create middleware to add DateTime to data
     input_instance = models.Input.objects.last()
 
     if input_instance is not None:
@@ -63,7 +61,6 @@ def post_input(data):
 @shared_task
 def post_router_input(data):
     logger.info(f'post_input data {data}')
-    # TODO create middleware to add DateTime to data
     input_instance = models.Input.objects.last()
 
     if input_instance is not None:

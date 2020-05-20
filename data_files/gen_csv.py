@@ -34,7 +34,7 @@ def populate_test_csv():
 
 
 def populate_new_csv():
-    f = open('test_setup_files/new3.csv', 'w')
+    f = open('new3.csv', 'w')
 
     with f:
         input_fields = ['time_step', 'Q']

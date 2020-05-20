@@ -9,6 +9,7 @@ import os.path
 import generator_tasks
 
 
+# receives idf and epw files, generates the FMU and stores.
 @route('/file_upload/<model_name>', method='POST')
 def file_upload(model_name):
     upload = request.files
@@ -65,9 +66,9 @@ def file_upload(model_name):
     return message
 
 
+# send stored FMU to the correct simulator container
 @route('/fmu_to_simulator/<model_name>', method='POST')
 def send_fmu(model_name):
-
     json_data = request.json
 
     model_count = json_data['model_count']

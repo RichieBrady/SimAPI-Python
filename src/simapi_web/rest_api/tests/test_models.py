@@ -1,6 +1,5 @@
 from django.test import TestCase
 from rest_api.models import Input, Output, User, FmuModel
-# TODO rewrite tests to suit new models
 
 
 class UserTestCase(TestCase):
@@ -33,8 +32,6 @@ class UserTestCase(TestCase):
             self.test_user.__str__(),
             self.test_user.email
         )
-
-        # TODO test model manager
 
         self.super_user = User.objects.create_superuser(
             name='super_user',

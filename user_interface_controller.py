@@ -18,7 +18,7 @@ class Controller:
         idf_file = open(idf_path, 'rb')
         epw_file = open(epw_path, 'rb')
 
-        # place .idf and .epw in simapi-python/test_setup_files/  replace a.idf and a.epw
+        # place .idf and .epw in simapi-python/data_files/  replace a.idf and a.epw
         file = {'idf_file': ('update.idf', idf_file),
                 'epw_file': ('update.epw', epw_file)}
 

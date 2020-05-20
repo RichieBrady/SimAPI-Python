@@ -31,14 +31,11 @@ class MyHandler(PatternMatchingEventHandler):
     step_size = None
     prev_time_step = 0
 
+    # when fmu file is saved initialize the pyFMI object
     def on_created(self, event):
-        print("ON_CREATED")
         if self.model_params_set is False:
-            print("INIT MODEL")
             folder_path = str(event.src_path).rsplit('/', 1)[0]
-            print("FOLDER PATH: " + folder_path)
             with open(folder_path + '/model_params.json') as json_file:
-                print("WITH OPEN")
                 model_params_ready = False
 
                 try:
@@ -58,7 +55,9 @@ class MyHandler(PatternMatchingEventHandler):
 
                     self.header = {'Authorization': 'Token ' + params['Authorization']}
 
+                    # if the simulation container is not designated as the first conatainer in a swarm
                     if not params['isSimOne']:
+                        # create a new model instance in the django database for this container
                         init_url = 'http://web:8000/init_model/'
                         hostname = subprocess.getoutput("cat /etc/hostname")
                         self.model_name = self.model_name + '_' + hostname
@@ -81,9 +80,9 @@ class MyHandler(PatternMatchingEventHandler):
                     self.model_params_set = True
 
     def on_modified(self, event):
-
         # simulation time steps run here when time_step.txt is updated
         if event.src_path.endswith('time_step.txt') and self.model_params_set is True:
+            # read time step value from txt file
             with open(str(event.src_path)) as text_file:
 
                 text_file.seek(0)
@@ -93,12 +92,13 @@ class MyHandler(PatternMatchingEventHandler):
                 self.current_time_step = isint(data)
                 print("Current time Step read from file: " + str(self.current_time_step))
 
+            # overly complicated conditional accounts for the case where the process is triggered out of turn
             if self.current_time_step == self.prev_time_step + int(self.step_size) or not self.first_input_set:
                 self.first_input_set = True
                 self.prev_time_step = self.current_time_step
 
                 graphql_url = 'http://web:8000/graphql/'
-
+                # graphql query to retrieve the input data for the given time step
                 input_query = """
                 {{
                     inputs(modelN: "{0}", tStep: {1}) {{
@@ -109,12 +109,9 @@ class MyHandler(PatternMatchingEventHandler):
 
                 r = requests.get(url=graphql_url, json={'query': input_query})
 
-                print("INPUT_QUERY: " + input_query)
-                print("STATUS: input_query " + str(r.status_code))
-                print("TEXT: input_query " + r.text)
-
                 graphql_response = r.json()['data']['inputs'][0]['inputJson']
 
+                # format response json
                 self.current_input = json.loads(json.loads(graphql_response))
 
                 print("\ninput: " + str(self.current_input))
@@ -122,17 +119,10 @@ class MyHandler(PatternMatchingEventHandler):
                 # run do_step for current time step with current inputs
                 output_json = self.sim_obj.do_time_step(self.current_input)
 
-                print('OUTPUT FOR MODEL: ' + self.model_name + ' | ' + str(output_json))
-                # task uploads output to db
-
                 output_url = 'http://router:8000/route_output/'
 
                 output_json['Authorization'] = self.header['Authorization']
-                print('OUTPUT FOR MODEL: ' + self.model_name + ' | ' + str(output_json))
                 r = requests.post(output_url, headers=self.header, json=json.dumps(output_json))
-                print("OUTPUT AUTH: " + str(output_json['Authorization']))
-                print("OUTPUT R.TEXT: " + str(r.text))
-                print("OUTPUT R.TEXT: " + str(r.status_code))
 
                 # when last time step has completed free and terminate instance
                 if self.current_time_step == self.sim_obj.final_time - int(self.step_size):

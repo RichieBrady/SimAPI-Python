@@ -19,6 +19,7 @@ def write_time_step(t_step, filename):
         f.write(t_step)
 
 
+# receive timestep value for new inputs. database queried using timestep to retrieve correct input
 @route('/model_input', method='POST')
 def get_input():
     print("RECEIVED INPUT: " + str(request.json))
@@ -27,6 +28,7 @@ def get_input():
     write_time_step(t_step, '/home/deb/code/fmu_data/time_step.txt')
 
 
+# receive FMU file from generator. Saving the FMU triggers the simulation_process
 @route('/receive_fmu/<model_name>', method='POST')
 def receive_fmu(model_name):
     upload = request.files

@@ -7,7 +7,6 @@ from django.contrib.auth.models import BaseUserManager
 
 from django.contrib.postgres.fields import JSONField
 
-# TODO make fat models
 from django.db.models import FileField
 
 

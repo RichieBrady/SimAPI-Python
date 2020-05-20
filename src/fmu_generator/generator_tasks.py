@@ -2,12 +2,12 @@ import celeryconfig
 
 from celery import Celery
 
-from energy_plus_to_fmu import RunEnergyPlusToFMU
+from run_eptf import RunEnergyPlusToFMU
 
 app = Celery('generator_tasks')
 app.config_from_object(celeryconfig)
 
-
+# runs EnergyPlusToFMU command and generates FMU
 @app.task
 def gen_fmu(idf, epw, directory):
     energy_plus = RunEnergyPlusToFMU(idf=idf, epw=epw, directory=directory)
