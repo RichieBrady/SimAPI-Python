@@ -59,9 +59,14 @@ Step Size: Integer value corresponding to length of time in seconds of each time
 Final Time: Float value corresponding to length of time in hours the simulation spans. Min value = 24.0. 
 
 ##### Buttons
-Upload idf: Opens a file select window. Choose .idf
+Upload idf: Opens a file select window. Choose .idf navigate to data_files folder and select new.idf
 
-Upload epw: Opens a file select window. Choose .epw
+Upload epw: Opens a file select window. Choose .epw navigate to data_files folder and select new.epw
+
+
+
+Upload cvs: Opens file select window, navigate to data_files folder and select one of the csv files new.csv, new1.csv, 
+or new2.csv. If running multiple simulations up to a max of three ctrl select the three csv files. 
 
 Validate Input: Click validate input to check if inputs are correct.
 
@@ -110,7 +115,8 @@ from the host machine. It may take sometime to complete a prune!
 ```
 docker system prune
 ```
-Hanging containers can quickly take up a lot of space.
+Hanging containers can quickly take up a lot of space. Warning when using this command if other containers separate from
+this project are running.
 
 ## Project Development
 
