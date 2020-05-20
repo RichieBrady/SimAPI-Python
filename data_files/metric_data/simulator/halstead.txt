@@ -1,0 +1,65 @@
+simulation_process.py:
+    h1: 8
+    h2: 58
+    N1: 32
+    N2: 61
+    vocabulary: 66
+    length: 93
+    calculated_length: 363.76289771739914
+    volume: 562.1286531003361
+    difficulty: 4.206896551724138
+    effort: 2364.8170923531384
+    time: 131.37872735295213
+    bugs: 0.18737621770011204
+__init__.py:
+    h1: 0
+    h2: 0
+    N1: 0
+    N2: 0
+    vocabulary: 0
+    length: 0
+    calculated_length: 0
+    volume: 0
+    difficulty: 0
+    effort: 0
+    time: 0.0
+    bugs: 0.0
+simulator_api/sim_api.py:
+    h1: 2
+    h2: 12
+    N1: 7
+    N2: 14
+    vocabulary: 14
+    length: 21
+    calculated_length: 45.01955000865388
+    volume: 79.95445336320968
+    difficulty: 1.1666666666666667
+    effort: 93.2801955904113
+    time: 5.182233088356183
+    bugs: 0.026651484454403226
+simulator/simulation_obj.py:
+    h1: 3
+    h2: 8
+    N1: 5
+    N2: 10
+    vocabulary: 11
+    length: 15
+    calculated_length: 28.75488750216347
+    volume: 51.89147427955947
+    difficulty: 1.875
+    effort: 97.296514274174
+    time: 5.405361904120777
+    bugs: 0.01729715809318649
+simulator/test_simulation_obj.py:
+    h1: 1
+    h2: 3
+    N1: 2
+    N2: 4
+    vocabulary: 4
+    length: 6
+    calculated_length: 4.754887502163469
+    volume: 12.0
+    difficulty: 0.6666666666666666
+    effort: 8.0
+    time: 0.4444444444444444
+    bugs: 0.004

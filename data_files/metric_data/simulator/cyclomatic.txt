@@ -1,0 +1,18 @@
+simulation_process.py
+    C 21:0 MyHandler - B (7)
+    M 83:4 MyHandler.on_modified - B (6)
+    M 34:4 MyHandler.on_created - A (5)
+    F 13:0 isint - A (2)
+simulator_api/sim_api.py
+    F 30:0 receive_fmu - A (4)
+    F 12:0 write_json - A (1)
+    F 17:0 write_time_step - A (1)
+    F 22:0 get_input - A (1)
+simulator/simulation_obj.py
+    M 41:4 SimulationObject.do_time_step - A (5)
+    C 14:0 SimulationObject - A (3)
+    M 18:4 SimulationObject.__init__ - A (1)
+    M 37:4 SimulationObject.model_init - A (1)
+
+12 blocks (classes, functions, methods) analyzed.
+Average complexity: A (3.0833333333333335)

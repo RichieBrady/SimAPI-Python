@@ -1,0 +1,52 @@
+celeryconfig.py:
+    h1: 0
+    h2: 0
+    N1: 0
+    N2: 0
+    vocabulary: 0
+    length: 0
+    calculated_length: 0
+    volume: 0
+    difficulty: 0
+    effort: 0
+    time: 0.0
+    bugs: 0.0
+generator_tasks.py:
+    h1: 0
+    h2: 0
+    N1: 0
+    N2: 0
+    vocabulary: 0
+    length: 0
+    calculated_length: 0
+    volume: 0
+    difficulty: 0
+    effort: 0
+    time: 0.0
+    bugs: 0.0
+energy_plus_to_fmu.py:
+    h1: 1
+    h2: 13
+    N1: 7
+    N2: 14
+    vocabulary: 14
+    length: 21
+    calculated_length: 48.105716335834195
+    volume: 79.95445336320968
+    difficulty: 0.5384615384615384
+    effort: 43.05239796480521
+    time: 2.3917998869336228
+    bugs: 0.026651484454403226
+generator_api.py:
+    h1: 6
+    h2: 43
+    N1: 29
+    N2: 58
+    vocabulary: 49
+    length: 87
+    calculated_length: 248.83915945651714
+    volume: 488.4797564380231
+    difficulty: 4.046511627906977
+    effort: 1976.6390144236284
+    time: 109.81327857909046
+    bugs: 0.16282658547934103
