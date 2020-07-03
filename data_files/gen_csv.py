@@ -34,12 +34,12 @@ def populate_test_csv():
 
 
 def populate_new_csv():
-    f = open('new3.csv', 'w')
+    f = open('TEST_MODEL_CSV2.csv', 'w')
 
     with f:
-        input_fields = ['time_step', 'Q']
-        temp_change = [5, -5]
-        q = 0
+        input_fields = ['time_step', 'Tset']
+        temp_change = [1, -1]
+        q = 23
 
         writer = csv.DictWriter(f, fieldnames=input_fields)
         writer.writeheader()
@@ -48,10 +48,10 @@ def populate_new_csv():
             k = random.randint(0, 1)
             a = temp_change[k]
 
-            if 0 < (q + a) < 100:
+            if -6 < (q + a) < 53:
                 q += temp_change[k]
 
-            writer.writerow({'time_step': j, 'Q': q})
+            writer.writerow({'time_step': j, 'Tset': q})
 
             j += 900
     f.close()

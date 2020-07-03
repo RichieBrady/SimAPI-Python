@@ -6,7 +6,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
                wget \
                vim \
                sudo \
-               iputils-ping
+               iputils-ping \
+               libx11-6
 
 RUN useradd -rm -d /home/deb -s /bin/bash -g root -G sudo -u 1002 deb
 COPY run.sh /run.sh
@@ -24,12 +25,12 @@ RUN wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -
     && bash ~/miniconda.sh -b -p ~/miniconda \
     && rm ~/miniconda.sh
 
-RUN wget https://github.com/NREL/EnergyPlus/releases/download/v9.1.0/EnergyPlus-9.1.0-08d2e308bb-Linux-x86_64.tar.gz -O ~/EnergyPlus-9.1.0-08d2e308bb-Linux-x86_64.tar.gz \
+RUN wget https://github.com/NREL/EnergyPlus/releases/download/v9.3.0/EnergyPlus-9.3.0-baff08990c-Linux-x86_64.tar.gz -O ~/EnergyPlus-9.3.0-baff08990c-Linux-x86_64.tar.gz \
     && mkdir /home/deb/EnergyPlus \
-    && tar -xzvf ~/EnergyPlus-9.1.0-08d2e308bb-Linux-x86_64.tar.gz -C  ~/EnergyPlus/ \
-    && rm ~/EnergyPlus-9.1.0-08d2e308bb-Linux-x86_64.tar.gz \
-    && mv ~/EnergyPlus/EnergyPlus-9.1.0-08d2e308bb-Linux-x86_64/* ~/EnergyPlus/ \
-    && rm -d ~/EnergyPlus/EnergyPlus-9.1.0-08d2e308bb-Linux-x86_64
+    && tar -xzvf ~/EnergyPlus-9.3.0-baff08990c-Linux-x86_64.tar.gz -C  ~/EnergyPlus/ \
+    && rm ~/EnergyPlus-9.3.0-baff08990c-Linux-x86_64.tar.gz \
+    && mv ~/EnergyPlus/EnergyPlus-9.3.0-baff08990c-Linux-x86_64/* ~/EnergyPlus/ \
+    && rm -d ~/EnergyPlus/EnergyPlus-9.3.0-baff08990c-Linux-x86_64
 
 ENV PATH /root/miniconda/bin:$PATH
 ENV PATH /home/deb/miniconda/bin:$PATH

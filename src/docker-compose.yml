@@ -93,7 +93,7 @@ services:
     build: ./fmu_simulator
     command: bash -c "/run.sh"
     ports:
-      - 8003-8103:8000
+      - 8000
     depends_on:
       - web
       - generator

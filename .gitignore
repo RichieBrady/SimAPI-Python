@@ -123,3 +123,5 @@ dmypy.json
 docs
 temp
 TODO.py
+/data_files/*
+/Copy of IDF
