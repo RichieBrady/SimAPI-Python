@@ -261,6 +261,7 @@ class UserInterface:
         while i < f_time:  # TODO Make final time generic
 
             j = 0
+            # TODO process models async client side!
             while j < model_count:
                 if len(data_frames) > 1:
                     df = data_frames[j]

@@ -34,7 +34,7 @@ def populate_test_csv():
 
 
 def populate_new_csv():
-    f = open('TEST_MODEL_CSV2.csv', 'w')
+    f = open('TEST_MODEL_one_year.csv', 'w')
 
     with f:
         input_fields = ['time_step', 'Tset']
@@ -44,7 +44,7 @@ def populate_new_csv():
         writer = csv.DictWriter(f, fieldnames=input_fields)
         writer.writeheader()
         j = 0
-        for i in range(97):
+        for i in range(35040):
             k = random.randint(0, 1)
             a = temp_change[k]
 

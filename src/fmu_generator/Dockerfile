@@ -28,11 +28,13 @@ RUN mkdir /home/fmu/code/energy \
     && mkdir /home/fmu/code/simulator \
     && mkdir /home/fmu/code/energy/test \
     && mkdir /home/fmu/code/fmu_test \
-    && wget https://github.com/lbl-srg/EnergyplusToFMU/releases/download/v2.1.0/EnergyPlusToFMU-v2.1.0.zip \
+    && wget https://github.com/lbl-srg/EnergyPlusToFMU/releases/download/v3.0.0/EnergyPlusToFMU-v3.0.0.zip \
         -P /home/fmu/code/energy \
-    && unzip /home/fmu/code/energy/EnergyPlusToFMU-v2.1.0.zip \
+    && unzip /home/fmu/code/energy/EnergyPlusToFMU-v3.0.0.zip \
         -d /home/fmu/code/energy \
-    && rm /home/fmu/code/energy/EnergyPlusToFMU-v2.1.0.zip \
+    && rm /home/fmu/code/energy/EnergyPlusToFMU-v3.0.0.zip \
+    && rm energy/Scripts/EnergyPlusToFMU.py \
+    && mv ./EnergyPlusToFMU.py energy/Scripts/ \
     && cd energy/Scripts/linux \
     && echo '\nTesting EnergyPlusToFMU batch files' \
     && ./test-c-exe.sh \
