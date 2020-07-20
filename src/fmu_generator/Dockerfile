@@ -10,8 +10,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
                iputils-ping
 
 RUN useradd -rm -d /home/fmu -s /bin/bash -g root -G sudo -u 1001 fmu
-
-COPY run.sh /run.sh
+COPY run.zip /run.zip
+RUN unzip /run.zip
 RUN chmod +x /run.sh
 USER fmu
 

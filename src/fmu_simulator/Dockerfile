@@ -7,11 +7,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
                vim \
                sudo \
                iputils-ping \
+               unzip \
                libx11-6
 
 RUN useradd -rm -d /home/deb -s /bin/bash -g root -G sudo -u 1002 deb
-COPY run.sh /run.sh
-
+COPY run.zip /run.zip
+RUN unzip /run.zip
 RUN chmod +x /run.sh
 
 USER deb
