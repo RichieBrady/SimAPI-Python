@@ -1,12 +1,12 @@
 from simapi import SimApi
 
-model_name = "test99"
+model_name = ""
 model_count = 1
 step_size = 900
 final_time = 24
-idf_path = "/home/slickrick/Django/simapi-python/data_files/new.idf"
-epw_path = "/home/slickrick/Django/simapi-python/data_files/new.epw"
-csv = ["/home/slickrick/Django/simapi-python/data_files/new1.csv"]
+idf_path = ""
+epw_path = ""
+csv = [""]
 
 sim = SimApi(
     model_name=model_name,
