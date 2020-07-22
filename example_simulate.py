@@ -1,12 +1,12 @@
 from simapi import SimApi
 
-model_name = ""
+model_name = "test101"
 model_count = 1
 step_size = 900
 final_time = 24
-idf_path = ""
-epw_path = ""
-csv = [""]
+idf_path = "/home/slickrick/Django/simapi-python/data_files/new.idf"
+epw_path = "/home/slickrick/Django/simapi-python/data_files/new.epw"
+csv = ["/home/slickrick/Django/simapi-python/data_files/new1.csv"]
 
 sim = SimApi(
     model_name=model_name,
@@ -20,7 +20,7 @@ sim = SimApi(
 
 # TODO add check for existing user
 # TODO add endpoint to clear and reset system
-# sim.create_user()
+sim.create_user()
 sim.login()
 
 print("Generating FMU...")

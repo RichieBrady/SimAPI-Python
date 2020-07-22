@@ -13,6 +13,7 @@ graphql_url = 'http://0.0.0.0:8000/graphql/'
 send_fmu = 'http://0.0.0.0:8000/send_fmu/'
 
 
+# TODO add utility method to prepare user csv e.g. add time step column etc.
 class SimApi:
 
     def __init__(self, model_name, model_count, step_size, final_time, idf_path, epw_path, csv):
@@ -120,11 +121,13 @@ class SimApi:
         # prints init_data on successful post
         return resp.status_code
 
+    # TODO split into multiple methods giving the user more control over simulations
     def simulate_models(self):
         """
         Starts communication with simulation model and returns when model has reached its final time
         :return: (int) 200 for success
         """
+
         # TODO needs to be refactored!!
         def test_method(query, url):
             resp = requests.get(url=url, json={'query': query})
@@ -159,7 +162,7 @@ class SimApi:
             data_frames.append(pd.read_csv(file))
 
         i = 0  # first step
-        while i < f_time:  # TODO Make final time generic
+        while i < f_time:
 
             j = 0
             # TODO process models async client side!

@@ -127,6 +127,7 @@ class MyHandler(PatternMatchingEventHandler):
                 # when last time step has completed free and terminate instance
                 if self.current_time_step == self.sim_obj.final_time - int(self.step_size):
                     self.sim_obj.model.free_instance()
+                    self.sim_obj.model.terminate()
 
 
 if __name__ == '__main__':
