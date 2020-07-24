@@ -7,16 +7,6 @@ import sys
 sys.path.append(os.path.join(os.path.dirname(__file__), ''))
 
 
-def write_json(data, filename):
-    with open(filename, 'w') as f:
-        json.dump(data, f, ensure_ascii=False, indent=4)
-
-
-def write_time_step(t_step, filename):
-    with open(filename, 'w') as f:
-        f.write(t_step)
-
-
 # receive timestep value for new inputs. database queried using timestep to retrieve correct input
 @route('/model_input', method='POST')
 def get_input():

@@ -93,7 +93,8 @@ def send_fmu(model_name):
         print(r.status_code)
         print(r.text)
         fmu_file.close()
-        time.sleep(2)
+        if i > 1:
+            time.sleep(2)
         i += 1
 
     response.status = 200
