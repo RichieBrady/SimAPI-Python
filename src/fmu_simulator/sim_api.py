@@ -1,12 +1,10 @@
-import time
-
 from bottle import request, route, run, response
 
 import os.path
 import json
 import sys
 
-sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+sys.path.append(os.path.join(os.path.dirname(__file__), ''))
 
 
 def write_json(data, filename):
@@ -22,10 +20,9 @@ def write_time_step(t_step, filename):
 # receive timestep value for new inputs. database queried using timestep to retrieve correct input
 @route('/model_input', method='POST')
 def get_input():
-    print("RECEIVED INPUT: " + str(request.json))
-    data = json.loads(request.json)
-    t_step = data['time_step']
-    write_time_step(t_step, '/home/deb/code/fmu_data/time_step.txt')
+    temp = json.loads(request.json)
+    req_data = json.dumps({"initialize": False, "input_data": temp['data']['input_data']})
+    os.system("python sim_worker.py '{}'".format(req_data))
 
 
 # receive FMU file from generator. Saving the FMU triggers the simulation_process
@@ -44,25 +41,16 @@ def receive_fmu(model_name):
     else:
         print("Successfully created the directory %s " % save_path)
 
-    json_data = request.forms.pop('json')
-    j_dict = {'model_params': []}
-
-    j_dict['model_params'].append(json.loads(json_data))
-    write_json(j_dict, save_path + '/model_params.json')
-    print("JSON_DATA RECEIVE: " + str(json_data))
-
-    time.sleep(1)
-
     for name, file in upload.iteritems():
         print("Saving: " + name)
         try:
             file.save(save_path)
         except IOError as error:  # need way to trigger sim process without creating new folder/file
-            new_file = open(save_path + '/trigger.txt', 'w')
-            new_file.write("Trigger FMU")
-            new_file.close()
-            print("Error {0} Reusing existing file".format(error))
+            print("Error saving FMU:\n{}".format(error))
 
+    json_data = request.forms.pop('json')
+
+    os.system("python sim_worker.py '{}'".format(json_data))
     response.status = 200
     return 'File upload success in sim container for model_name = {0}'.format(model_name)
 

@@ -75,14 +75,17 @@ def send_fmu(model_name):
 
     i = 1
     while i <= int(model_count):
+        # TODO change isSimOne sim_id and store "src_simulator_{0}".format(i)
         if i == 1:
             json_data['isSimOne'] = True
         else:
             json_data['isSimOne'] = False
 
+        sim_data = {"initialize": True, "data": json_data}
+
         fmu_file = open('/home/fmu/code/fmu_test/' + model_name + '/' + model_name + '.fmu', 'rb')
         file = {'fmu': (model_name + '.fmu', fmu_file, 'application/zip'),
-                'json': (None, json.dumps(json_data), 'application/json')}
+                'json': (None, json.dumps(sim_data), 'application/json')}
 
         url = 'http://src_simulator_{0}:8000/receive_fmu/{1}'.format(i, model_name)
         r = requests.post(url, files=file)

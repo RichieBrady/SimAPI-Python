@@ -1,12 +1,12 @@
 from simapi import SimApi
 
-model_name = ""
+model_name = "test"
 model_count = 1
-step_size = 900
-final_time = 24
-idf_path = ""
-epw_path = ""
-csv = [""]
+step_size = 900  # TODO change to steps per hour parse on backend
+final_time = 24  # TODO convert to dict {'days': , 'months' , 'year': } parse on backend
+idf_path = "data_files/new.idf"
+epw_path = "data_files/new.epw"
+csv = ["data_files/new1.csv"]
 
 sim = SimApi(
     model_name=model_name,

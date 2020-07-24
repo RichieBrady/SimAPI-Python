@@ -67,7 +67,7 @@ def post_router_input(data):
         url = 'http://router:8000/route_input/{0}'.format(data['container_id'])
         logger.info(f'post_input url {url}')
         headers = {'Content-type': 'application/json'}
-        data = {'time_step': data['time_step']}
+        data = {'data': data}
         r = requests.post(url=url, json=json.dumps(data), headers=headers)
 
         return r.status_code

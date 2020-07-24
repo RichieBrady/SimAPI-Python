@@ -1,6 +1,6 @@
+import json
 import os
 import sys
-import time
 
 import pyfmi
 from pyfmi import load_fmu
@@ -38,7 +38,6 @@ class SimulationObject:
     def model_init(self):
         """ Initialize model with start and finish time """
         self.model.initialize(0, self.final_time)
-        time.sleep(1)
 
     def do_time_step(self, json_input):
         """
@@ -48,15 +47,16 @@ class SimulationObject:
             calls model.do_step,
             creates new dict with output then returns output dict as json to pass back to API
         """
+        input_data = json.loads(json_input)
+        time_step = input_data['time_step']
 
-        time_step = json_input['time_step']
-        print("input -> " + str(json_input))
+        print("input -> " + str(input_data))
         # identify input variable type
-        for key in json_input:
+        for key in input_data:
             if key in self.model_real_vars:
-                self.model.set(key, float(json_input[key]))
+                self.model.set(key, float(input_data[key]))
             elif key in self.model_int_vars:
-                self.model.set(key, int(json_input[key]))
+                self.model.set(key, int(input_data[key]))
 
         self.model.do_step(current_t=time_step, step_size=self.step_size, new_step=True)
 

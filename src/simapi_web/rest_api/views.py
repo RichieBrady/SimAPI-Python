@@ -108,7 +108,8 @@ class InputViewSet(viewsets.ModelViewSet):
 
         data = {
             'time_step': time_step,
-            'container_id': model.container_id
+            'container_id': model.container_id,
+            'input_data': input_json_field
         }
 
         serializer.save(user=self.request.user, fmu_model=model, time_step=time_step, input_json=input_json_field)

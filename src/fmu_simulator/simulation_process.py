@@ -1,5 +1,6 @@
 import json
 import subprocess
+import sys
 import time
 from json import JSONDecodeError
 
@@ -31,6 +32,7 @@ class MyHandler(PatternMatchingEventHandler):
     step_size = None
     prev_time_step = 0
 
+    # TODO create new process on initialize request
     # when fmu file is saved initialize the pyFMI object
     def on_created(self, event):
         if self.model_params_set is False:
@@ -55,7 +57,7 @@ class MyHandler(PatternMatchingEventHandler):
 
                     self.header = {'Authorization': 'Token ' + params['Authorization']}
 
-                    # if the simulation container is not designated as the first conatainer in a swarm
+                    # if the simulation container is not designated as the first container in a swarm
                     if not params['isSimOne']:
                         # create a new model instance in the django database for this container
                         init_url = 'http://web:8000/init_model/'
@@ -127,7 +129,8 @@ class MyHandler(PatternMatchingEventHandler):
                 # when last time step has completed free and terminate instance
                 if self.current_time_step == self.sim_obj.final_time - int(self.step_size):
                     self.sim_obj.model.free_instance()
-                    self.sim_obj.model.terminate()
+                    sys.exit(0)
+                    #self.sim_obj.model.terminate()
 
 
 if __name__ == '__main__':

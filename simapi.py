@@ -135,6 +135,7 @@ class SimApi:
 
             return len(json_data)
 
+        # TODO needs rework asap
         # query for all models in db related to initial_model_name.
         model_query = """
                    {{
@@ -193,7 +194,7 @@ class SimApi:
                 }}
                 """.format(sim_names[j], i)
 
-                # move outside loop and poll once for len() = n, where n is number of simulations!
+                # TODO move outside loop and poll once for len() = n, where n is number of simulations!
                 polling2.poll(
                     lambda: test_method(query=output_query, url=graphql_url) == 1,
                     step=0.1,
@@ -211,3 +212,12 @@ class SimApi:
 
         print("\nSimulation(s) finished!\n")
         return 200
+
+    @staticmethod
+    def multi_thread_client(self):
+        """
+        Let user make multi-threaded requests, one thread per simulation. Avoids sequential processing of container
+        requests client side.
+        :return:
+        """
+        return NotImplementedError
