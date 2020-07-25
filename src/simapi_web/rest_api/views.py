@@ -79,12 +79,13 @@ class FmuModelViewSet(viewsets.ModelViewSet):
         if 'model_count' in self.request.data:
             data['model_count'] = self.request.data['model_count']
 
+        # TODO need to change poll_forever and perform check to see if FMU is created, also rework below
         if self.request.data['container_id'] not in self.request.data['model_name']:
             transaction.on_commit(lambda: tasks.post_model.apply_async((data,), queue='web', routing_key='web'))
             polling2.poll(
                 lambda: check_result_backend(self.request.data['model_name']) is True,
                 step=10,
-                poll_forever=True)  # TODO need to change poll_forever and perform check to see if FMU is created
+                poll_forever=True)
             return Response("FMU Ready", status=200)
 
 

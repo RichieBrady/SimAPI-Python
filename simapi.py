@@ -75,10 +75,12 @@ class SimApi:
 
         resp = requests.post(login_url, data=data)
 
-        json_resp = resp.json()
+        if resp.status_code == 200:
+            json_resp = resp.json()
 
-        token = json_resp['token']  # get validation token
-        self._header = {'Authorization': 'Token ' + token}  # set request header
+            token = json_resp['token']  # get validation token
+            self._header = {'Authorization': 'Token ' + token}  # set request header
+        return resp.status_code
 
     def send_and_generate(self):
         """

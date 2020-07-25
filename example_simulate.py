@@ -1,12 +1,12 @@
 from simapi import SimApi
 
-model_name = "test"
+model_name = "test123"
 model_count = 1
 step_size = 900  # TODO change to steps per hour parse on backend
-final_time = 24  # TODO convert to dict {'days': , 'months' , 'year': } parse on backend
-idf_path = "data_files/new.idf"
-epw_path = "data_files/new.epw"
-csv = ["data_files/new1.csv"]
+final_time = 8760  # TODO convert to dict {'days': , 'months' , 'year': } parse on backend
+idf_path = "data_files/brandon_house.idf"
+epw_path = "data_files/brandon.epw"
+csv = ["data_files/TEST_MODEL_one_year.csv"]
 
 sim = SimApi(
     model_name=model_name,
@@ -20,8 +20,9 @@ sim = SimApi(
 
 # TODO add check for existing user
 # TODO add endpoint to clear and reset system
-sim.create_user()
-sim.login()
+if not sim.login() == 200:
+    sim.create_user()
+    sim.login()
 
 print("Generating FMU...")
 generate_resp = sim.send_and_generate()
