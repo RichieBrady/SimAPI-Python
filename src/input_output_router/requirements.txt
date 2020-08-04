@@ -1,4 +1,4 @@
-amqp==2.5.2
+amqp==2.6.1
 bottle==0.12.18
 celery==4.4.1
 psycopg2-binary==2.8.4

@@ -1,5 +1,6 @@
+import csv
 import json
-
+import logging
 import polling2
 import requests
 import pandas as pd
@@ -29,6 +30,13 @@ class SimApi:
         :param epw_path: (string) absolute path to .epw
         :param csv: (list) absolute path(s) to csv file(s), number of files must equal model count
         """
+        self.logger = logging.getLogger('simapi')
+        handler = logging.FileHandler('./simapi.log')
+        formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
+        handler.setFormatter(formatter)
+        self.logger.addHandler(handler)
+        self.logger.setLevel(logging.INFO)
+
         self._header = None
         self._model_name = model_name
         self._model_count = model_count
@@ -45,6 +53,7 @@ class SimApi:
             'step_size': self._step_size,  # step size in seconds. 600 secs = 10 mins
             'final_time': self._final_time  # 24 hours = 86400 secs
         }
+        self.sim_names = []
 
     @staticmethod
     def create_user(user_email='user@user.com', user_name='user', user_password='user user88'):
@@ -119,7 +128,7 @@ class SimApi:
 
         # TODO check if model count = initialized_model_count and relay to user,
         #  account for case when initialized_model_count < model count
-        initialized_model_count = len(r)
+        # initialized_model_count = len(r)
         # prints init_data on successful post
         return resp.status_code
 
@@ -129,12 +138,10 @@ class SimApi:
         Starts communication with simulation model and returns when model has reached its final time
         :return: (int) 200 for success
         """
-
-        # TODO needs to be refactored!!
         def test_method(query, url):
             resp = requests.get(url=url, json={'query': query})
             json_data = resp.json()['data']['outputs']
-
+            # self.logger.info("Output current length: {}".format(len(json_data)))
             return len(json_data)
 
         # TODO needs rework asap
@@ -150,12 +157,11 @@ class SimApi:
         r = requests.get(url=graphql_url, json={'query': model_query})
 
         i = 0
-        sim_names = []
 
         while i < self._model_count:
             name = r.json()['data']['fmuModels'][i]['modelName']  # extract model name from graphql query response
             print(name)
-            sim_names.append(name)  # store extracted model names.
+            self.sim_names.append(name)  # store extracted model names.
             i += 1
 
         f_time = 60 * 60 * self._final_time
@@ -180,7 +186,7 @@ class SimApi:
                 input_dict = row.to_dict('records')
                 input_dict = input_dict[0]
                 input_data = {
-                    'fmu_model': sim_names[j],
+                    'fmu_model': self.sim_names[j],
                     'time_step': i,
                     'input_json': json.dumps(input_dict)
                 }
@@ -188,38 +194,77 @@ class SimApi:
                 r = requests.post(input_url, headers=self._header, data=input_data)
                 print(r.text + ' ' + str(r.status_code))
 
-                output_query = """
-                {{
-                    outputs(modelN: "{0}", tStep: {1}) {{
-                        outputJson
-                    }}
-                }}
-                """.format(sim_names[j], i)
-
-                # TODO move outside loop and poll once for len() = n, where n is number of simulations!
-                polling2.poll(
-                    lambda: test_method(query=output_query, url=graphql_url) == 1,
-                    step=0.1,
-                    poll_forever=True)
-
-                json_output = \
-                    requests.get(url=graphql_url, json={'query': output_query}).json()['data'][
-                        'outputs']
-
-                test = json.loads(json_output[0]['outputJson'])
-                print("Output: " + str(test) + "\n")
                 j += 1
 
-            i += self._step_size
+            output_query = """
+            {{
+                outputs(modelN: "{0}", tStep: {1}) {{
+                    outputJson
+                }}
+            }}
+            """.format(self._model_name, i)
 
-        print("\nSimulation(s) finished!\n")
+            try:
+                polling2.poll(
+                    lambda: test_method(query=output_query, url=graphql_url) == self._model_count,
+                    step=0.1,
+                    timeout=60)
+            except polling2.TimeoutException:
+                print("Timeout error occurred\nLength of results is: {}".format(
+                    test_method(query=output_query, url=graphql_url)))
+
+            i += self._step_size
+        print("\nAll data sent to simulation\n")
         return 200
+
+    def request_model_outputs(self, sim_name):
+        f_time = 60*60*self._final_time
+        num_of_steps = f_time/self._step_size
+        self.logger.info("Expected number of steps: {}".format(num_of_steps))
+
+        def test_method(query, url):
+            resp = requests.get(url=url, json={'query': query})
+            json_data = resp.json()['data']['outputs']
+            self.logger.info("Output current length: {}".format(len(json_data)))
+            return len(json_data)
+
+        output_query = """
+                        {{
+                            outputs(modelN: "{0}") {{
+                                timeStep
+                                outputJson
+                            }}
+                        }}
+                        """.format(sim_name)
+
+        print("Processing remaining inputs...")
+        try:
+            polling2.poll(
+                lambda: test_method(query=output_query, url=graphql_url) == num_of_steps,
+                step=0.1,
+                poll_forever=True)
+        except polling2.TimeoutException:
+            print("Timeout error occurred\nLength of results is: {}".format(test_method(query=output_query, url=graphql_url)))
+
+        json_output = requests.get(url=graphql_url, json={'query': output_query}).json()['data']['outputs']
+
+        # TODO store list of output names and use as csv column
+        print("Retrieving outputs...")
+        try:
+            csv_columns = ['time_step', 'output']
+            with open(f'output_csv/{sim_name}.csv', 'w') as csvfile:
+                writer = csv.DictWriter(csvfile, fieldnames=csv_columns)
+                writer.writeheader()
+                for out in json_output:
+                    writer.writerow({'time_step': out['timeStep'], 'output': json.loads(out['outputJson'])})
+        except IOError:
+            print("I/O error")
 
     @staticmethod
     def multi_thread_client(self):
         """
-        Let user make multi-threaded requests, one thread per simulation. Avoids sequential processing of container
-        requests client side.
+        Let user make multi-threaded requests, simulations per thread = (number of sims / available threads).
+        Avoid sequential processing of container requests client side.
         :return:
         """
         return NotImplementedError

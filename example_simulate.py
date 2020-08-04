@@ -1,12 +1,14 @@
 from simapi import SimApi
+from sim_timer import SimTimer
 
-model_name = "test123"
+model_name = "year"
 model_count = 1
 step_size = 900  # TODO change to steps per hour parse on backend
-final_time = 8760  # TODO convert to dict {'days': , 'months' , 'year': } parse on backend
+final_time = 8760  # TODO convert to dict {'days': , 'months': , 'year': } parse on backend
 idf_path = "data_files/brandon_house.idf"
 epw_path = "data_files/brandon.epw"
 csv = ["data_files/TEST_MODEL_one_year.csv"]
+timer = SimTimer()
 
 sim = SimApi(
     model_name=model_name,
@@ -18,28 +20,49 @@ sim = SimApi(
     csv=csv
 )
 
-# TODO add check for existing user
-# TODO add endpoint to clear and reset system
+
 if not sim.login() == 200:
     sim.create_user()
     sim.login()
 
 print("Generating FMU...")
+
+timer.capture_start_time()
+
 generate_resp = sim.send_and_generate()
 print("Generate response: {}".format(generate_resp))
 
+timer.capture_end_time()
+timer.calc_runtime("gen_fmu")
+
 if generate_resp == 201:
     print("Initializing...")
+    timer.capture_start_time()
     init_resp = sim.send_and_init()
+    timer.capture_end_time()
+    timer.calc_runtime("init_fmu")
 else:
-    print("Something went wrong while generating the fmu! Below is the response.")
+    print("Something went wrong while generating the fmu!")
     print(generate_resp)
     exit(-1)
 
-print("After init")
 if init_resp == 200:
+    print("Simulating...")
+    timer.capture_start_time()
     simulate_resp = sim.simulate_models()
+    timer.capture_end_time()
+    timer.calc_runtime("sim_fmu")
 else:
-    print("Something went wrong while initializing the fmu! Below is the response.")
+    print("Something went wrong while initializing the fmu!")
     print(init_resp)
     exit(-1)
+
+timer.capture_start_time()
+for name in sim.sim_names:
+    print("Sim name: {}".format(name))
+    sim.request_model_outputs(name)
+    print()
+
+timer.capture_end_time()
+timer.calc_runtime("req_outs")
+timer.write_times()

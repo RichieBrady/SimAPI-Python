@@ -1,5 +1,6 @@
 import csv
 import random
+import sys
 
 
 def populate_test_csv():
@@ -33,8 +34,8 @@ def populate_test_csv():
     f.close()
 
 
-def populate_new_csv():
-    f = open('TEST_MODEL_one_year.csv', 'w')
+def populate_new_csv(index):
+    f = open(f'year{index}.csv', 'w')
 
     with f:
         input_fields = ['time_step', 'Tset']
@@ -57,4 +58,5 @@ def populate_new_csv():
     f.close()
 
 
-populate_new_csv()
+for i in range(1, 20):
+    populate_new_csv(i)
