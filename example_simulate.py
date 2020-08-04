@@ -1,13 +1,13 @@
 from simapi import SimApi
 from sim_timer import SimTimer
 
-model_name = "year"
+model_name = "day1"
 model_count = 1
 step_size = 900  # TODO change to steps per hour parse on backend
-final_time = 8760  # TODO convert to dict {'days': , 'months': , 'year': } parse on backend
-idf_path = "data_files/brandon_house.idf"
-epw_path = "data_files/brandon.epw"
-csv = ["data_files/TEST_MODEL_one_year.csv"]
+final_time = 24  # TODO convert to dict {'days': , 'months': , 'year': } parse on backend
+idf_path = "data_files/new.idf"
+epw_path = "data_files/new.epw"
+csv = ["data_files/new1.csv"]
 timer = SimTimer()
 
 sim = SimApi(
