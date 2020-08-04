@@ -1,7 +1,7 @@
 from simapi import SimApi
 from sim_timer import SimTimer
 
-model_name = "day1"
+model_name = "test"
 model_count = 1
 step_size = 900  # TODO change to steps per hour parse on backend
 final_time = 24  # TODO convert to dict {'days': , 'months': , 'year': } parse on backend

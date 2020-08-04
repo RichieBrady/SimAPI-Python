@@ -15,6 +15,10 @@ COPY run.zip /run.zip
 RUN unzip /run.zip
 RUN chmod +x /run.sh
 
+COPY proc_monitor.zip /proc_monitor.zip
+RUN unzip /proc_monitor.zip
+RUN chmod +x /proc_monitor.sh
+
 USER deb
 RUN mkdir /home/deb/code
 RUN mkdir /home/deb/code/fmu_data

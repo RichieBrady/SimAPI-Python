@@ -91,7 +91,7 @@ services:
   # runs energy+ and python framework pyFMI to initializes and simulate FMUs
   simulator:
     build: ./fmu_simulator
-    command: bash -c "/run.sh"
+    command: bash -c "/run.sh & nohup /proc_monitor.sh"
     ports:
       - 8000
     depends_on:

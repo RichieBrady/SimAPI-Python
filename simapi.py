@@ -48,7 +48,7 @@ class SimApi:
         # model initialization parameters
         self._init_data = {
             'model_name': self._model_name,  # change name each time script is run!
-            'container_id': None,
+            'container_id': None,  # TODO change container_id from hostname to src_simulator_*
             'model_count': self._model_count,
             'step_size': self._step_size,  # step size in seconds. 600 secs = 10 mins
             'final_time': self._final_time  # 24 hours = 86400 secs
@@ -214,6 +214,17 @@ class SimApi:
                     test_method(query=output_query, url=graphql_url)))
 
             i += self._step_size
+
+        # send empty input to kill and restart process in sim container(s)
+        k = 0
+        while k < self._model_count:
+            input_data = {
+                'fmu_model': self.sim_names[k],
+                'time_step': 0,
+                'input_json': json.dumps({"end_proc": -1})
+            }
+            r = requests.post(input_url, headers=self._header, data=input_data)
+            k += 1
         print("\nAll data sent to simulation\n")
         return 200
 

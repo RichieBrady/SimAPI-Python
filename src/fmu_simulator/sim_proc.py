@@ -16,6 +16,7 @@ class SimProc:
         self.is_sim_one = sim_data['isSimOne']
         self.header = {'Authorization': 'Token ' + sim_data['Authorization']}
         self.prev_time_step = 0
+        self.kill_proc = False
 
     # TODO add method that validates parameters
 
@@ -26,7 +27,7 @@ class SimProc:
         if not self.is_sim_one:
             # create a new model instance in the django database for this container
             init_url = 'http://web:8000/init_model/'
-            # TODO change hostname to src_simulator_*
+
             hostname = subprocess.getoutput("cat /etc/hostname")
             self.model_name = self.model_name + '_' + hostname
 
@@ -60,9 +61,7 @@ class SimProc:
         step_input = json.loads(step_input)
         # when last time step has completed free and terminate instance
         if int(step_input['time_step']) == self.sim_obj.final_time - int(self.step_size):
-            self.sim_obj.model.free_instance()
-            # TODO causes segfault, temporary fix. Need to kill process from api call
-            self.sim_obj.model.terminate()
+            self.kill_proc = True
 
 
 if __name__ == '__main__':
@@ -76,10 +75,16 @@ if __name__ == '__main__':
 
             if data:
                 if not data['initialize']:
-                    sim_proc.process_step(data['input_data'])
+                    if sim_proc.kill_proc:
+                        break
+                    else:
+                        sim_proc.process_step(data['input_data'])
                 elif data['initialize']:
                     sim_proc = SimProc(data['data'])
                     sim_proc.initialize()
     except KeyboardInterrupt:
         print("ending process!")
         sys.exit(0)
+
+    print("ending process!")
+    sys.exit(1)
