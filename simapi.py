@@ -5,13 +5,13 @@ import polling2
 import requests
 import pandas as pd
 
-user_url = 'http://0.0.0.0:8000/user/'
-login_url = 'http://0.0.0.0:8000/login/'
-init_url = 'http://0.0.0.0:8000/init_model/'
-input_url = 'http://0.0.0.0:8000/input/'
-output_url = 'http://0.0.0.0:8000/output/'
-graphql_url = 'http://0.0.0.0:8000/graphql/'
-send_fmu = 'http://0.0.0.0:8000/send_fmu/'
+user_url = 'http://127.0.0.1:8000/user/'
+login_url = 'http://127.0.0.1:8000/login/'
+init_url = 'http://127.0.0.1:8000/init_model/'
+input_url = 'http://127.0.0.1:8000/input/'
+output_url = 'http://127.0.0.1:8000/output/'
+graphql_url = 'http://127.0.0.1:8000/graphql/'
+send_fmu = 'http://127.0.0.1:8000/send_fmu/'
 
 
 # TODO add utility method to prepare user csv e.g. add time step column etc.
@@ -81,7 +81,7 @@ class SimApi:
         """
         data = {"username": username,  # username = email
                 "password": password}
-
+        print(login_url)
         resp = requests.post(login_url, data=data)
 
         if resp.status_code == 200:

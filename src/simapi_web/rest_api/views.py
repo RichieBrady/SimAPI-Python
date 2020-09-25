@@ -11,9 +11,7 @@ from django_celery_results.models import TaskResult
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from rest_api import serializers
-from rest_api import models
-from rest_api import tasks
+from . import serializers,  models, tasks
 
 
 def check_result_backend(model_name):

@@ -1,6 +1,6 @@
 from django.db import models
 from rest_framework import serializers
-from rest_api.models import Input, Output, User, FmuModel, ContainerHostNames, FileModel
+from .models import Input, Output, User, FmuModel, ContainerHostNames, FileModel
 
 
 class UserSerializer(serializers.ModelSerializer):

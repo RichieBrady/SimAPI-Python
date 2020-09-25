@@ -3,7 +3,7 @@ from celery.utils.log import get_task_logger
 import requests
 import json
 
-from rest_api import models
+from . import models
 
 logger = get_task_logger(__name__)
 

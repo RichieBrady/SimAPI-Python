@@ -3,7 +3,7 @@ from graphene_django import DjangoObjectType
 
 from django.db.models import Q
 
-from rest_api import models
+from . import models
 
 
 class UserType(DjangoObjectType):
