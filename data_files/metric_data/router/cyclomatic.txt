@@ -1,9 +1,0 @@
-router_api.py
-    F 11:0 route_input - A (1)
-    F 16:0 route_output - A (1)
-router_tasks.py
-    F 17:0 post_input - A (1)
-    F 28:0 post_output - A (1)
-
-4 blocks (classes, functions, methods) analyzed.
-Average complexity: A (1.0)
