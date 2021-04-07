@@ -1,5 +1,5 @@
 billiard==3.6.3.0
-bottle==0.12.18
+bottle==0.12.19
 celery==4.4.1
 kombu==4.6.8
 requests==2.22.0
