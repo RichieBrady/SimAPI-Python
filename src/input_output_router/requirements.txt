@@ -1,5 +1,5 @@
 amqp==2.6.1
-bottle==0.12.18
+bottle==0.12.19
 celery==4.4.1
 psycopg2-binary==2.8.4
 requests
