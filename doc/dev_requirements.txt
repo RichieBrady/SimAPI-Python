@@ -1,4 +1,4 @@
-celery==3.1.26.post2
+celery==5.2.2
 coverage==5.0.3
 Django>=3.0.7
 django-celery>=3.3.1
@@ -6,7 +6,7 @@ djangorestframework>=3.11.0
 graphene==2.1.8
 matplotlib==3.1.1
 more-itertools==8.0.2
-numpy==1.17.3
+numpy==1.22.0
 psycopg2-binary==2.8.4
 requests==2.22.0
 scipy==1.4.1
