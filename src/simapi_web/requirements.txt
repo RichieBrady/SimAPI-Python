@@ -13,7 +13,7 @@ cycler==0.10.0
 Django==3.1.14
 djangorestframework==3.11.2
 django-filter==2.4.0
-django-celery-results==1.2.1
+django-celery-results==2.4.0
 graphene==2.1.8
 graphene-django==2.9.0
 graphql-core==2.2
