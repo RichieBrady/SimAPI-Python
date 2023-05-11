@@ -10,9 +10,9 @@ coreapi==2.3.3
 coreschema==0.0.4
 coverage==5.0.3
 cycler==0.10.0
-Django==3.0.12
+Django==3.1.14
 djangorestframework==3.11.2
-django-filter==2.2.0
+django-filter==2.4.0
 django-celery-results==2.4.0
 graphene==2.1.8
 graphene-django==2.9.0
@@ -34,7 +34,7 @@ pyparsing==2.4.6
 psycopg2-binary==2.8.4
 python-dateutil==2.8.1
 pytz==2019.3
-redis==3.4.1
+redis==4.4.4
 requests==2.22.0
 Rx==1.6.1
 simplejson==3.17.0
