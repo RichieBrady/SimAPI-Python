@@ -39,7 +39,7 @@ requests==2.22.0
 Rx==1.6.1
 simplejson==3.17.0
 six==1.13.0
-sqlparse==0.3.0
+sqlparse==0.4.4
 tornado==6.0.3
 uritemplate==3.0.1
 urllib3==1.25.8
