@@ -2,7 +2,7 @@ billiard==3.6.3.0
 bottle==0.12.20
 celery==5.2.2
 kombu==4.6.8
-requests==2.22.0
+requests==2.31.0
 watchdog==0.10.2
 sqlalchemy
 pathlib==1.0.1
