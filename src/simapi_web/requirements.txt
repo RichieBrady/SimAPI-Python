@@ -35,7 +35,7 @@ psycopg2-binary==2.8.4
 python-dateutil==2.8.1
 pytz==2019.3
 redis==4.4.4
-requests==2.22.0
+requests==2.31.0
 Rx==1.6.1
 simplejson==3.17.0
 six==1.13.0
